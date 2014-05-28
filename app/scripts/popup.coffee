@@ -1,3 +1,3 @@
 'use strict';
 
-console.log('\'Allo \'Allo! Popup')
+log('\'Allo \'Allo! Popup')

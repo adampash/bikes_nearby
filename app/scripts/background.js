@@ -4,12 +4,10 @@
     _this = this;
 
   chrome.runtime.onInstalled.addListener(function(details) {
-    return console.log('previousVersion', details.previousVersion);
+    return log('previousVersion', details.previousVersion);
   });
 
-  setNearest = function(stations) {
-    var station;
-    station = stations[0];
+  setNearest = function(station) {
     chrome.browserAction.setBadgeBackgroundColor({
       color: [0, 0, 255, 255]
     });
@@ -20,12 +18,12 @@
 
   if (navigator.geolocation != null) {
     bikes.getBikeData(function(stations) {
-      return setNearest(stations);
+      return setNearest(stations[0]);
     });
     setInterval(function() {
       var _this = this;
       return bikes.getBikeData(function(stations) {
-        return setNearest(stations);
+        return setNearest(stations[0]);
       });
     }, 60 * 1000);
   }

@@ -1,20 +1,19 @@
 'use strict';
 
 chrome.runtime.onInstalled.addListener (details) ->
-    console.log('previousVersion', details.previousVersion)
+    log('previousVersion', details.previousVersion)
 
-setNearest = (stations) ->
-  station = stations[0]
+setNearest = (station) ->
   chrome.browserAction.setBadgeBackgroundColor color: [0, 0, 255, 255]
   chrome.browserAction.setBadgeText({text: "" + station.availableBikes})
 
 if navigator.geolocation?
   bikes.getBikeData (stations) =>
-    setNearest(stations)
+    setNearest(stations[0])
 
   setInterval ->
     bikes.getBikeData (stations) =>
-      setNearest(stations)
+      setNearest(stations[0])
   # , 1000
   , 60 * 1000
 
