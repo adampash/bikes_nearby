@@ -1,3 +1,5 @@
+# modified from https://gist.github.com/clauswitt/1604972
+
 unless Number.prototype.toRad?
     Number.prototype.toRad = ->
         @ * Math.PI / 180
