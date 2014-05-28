@@ -1,4 +1,3 @@
-Don't use global/window. variables
 Integrate with Chicago/SF bike data
 Create threshhold of nearest bike (e.g., to show anything, nearest should be within 1 mile)
 Popup.html to list nearest 3-5 stations with distance
