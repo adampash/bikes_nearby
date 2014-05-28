@@ -7,6 +7,8 @@
       var bikeJSON,
         _this = this;
       bikeJSON = 'http://www.citibikenyc.com/stations/json';
+      'https://www.bayareabikeshare.com/stations/json';
+      'http://www.divvybikes.com/stations/json';
       return $.ajax({
         url: bikeJSON,
         dataType: 'json',

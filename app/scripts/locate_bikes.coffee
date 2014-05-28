@@ -4,7 +4,8 @@ window.bikes =
 
   findNearestStation: (coords) ->
     bikeJSON = 'http://www.citibikenyc.com/stations/json'
-    # bikeJSON = '/bikes.json'
+    'https://www.bayareabikeshare.com/stations/json'
+    'http://www.divvybikes.com/stations/json'
     $.ajax
       url: bikeJSON
       dataType: 'json'
