@@ -14,22 +14,17 @@
         success: (data) =>
           log data
           bikeStations = data.stationBeanList
-          nearest =
-            distance: null
-            station: null
-          for station in bikeStations
-            newDistance = @simpleDistance(coords, station)
-            if newDistance < nearest.distance or nearest.distance is null
-              nearest.distance = newDistance
-              nearest.distanceInMiles = distance.metersToMiles(
+          bikeStations.sort (station1, station2) =>
+            @simpleDistance(coords, station1) - @simpleDistance(coords, station2)
+          closestStations = []
+          for i in [0..5]
+            station = bikeStations[i]
+            station.distanceInMiles = distance.metersToMiles(
                 distance.getDistance(station, coords)
               )
-              nearest.station = station
-              log "New nearest station is:", nearest.station.stAddress1
-              log "New distance is:", nearest.distance
-          log "Nearest station is:", nearest
-          @callback nearest.station if @callback?
-          # setNearest nearest.station
+              closestStations.push station
+          log "Nearest station is:", closestStations[0]
+          @callback closestStations if @callback?
 
     fetchBikesNear: (position) ->
       log position

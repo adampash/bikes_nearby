@@ -7,7 +7,9 @@
     return console.log('previousVersion', details.previousVersion);
   });
 
-  setNearest = function(station) {
+  setNearest = function(stations) {
+    var station;
+    station = stations[0];
     chrome.browserAction.setBadgeBackgroundColor({
       color: [0, 0, 255, 255]
     });
@@ -17,13 +19,13 @@
   };
 
   if (navigator.geolocation != null) {
-    bikes.getBikeData(function(station) {
-      return setNearest(station);
+    bikes.getBikeData(function(stations) {
+      return setNearest(stations);
     });
     setInterval(function() {
       var _this = this;
-      return bikes.getBikeData(function(station) {
-        return setNearest(station);
+      return bikes.getBikeData(function(stations) {
+        return setNearest(stations);
       });
     }, 60 * 1000);
   }

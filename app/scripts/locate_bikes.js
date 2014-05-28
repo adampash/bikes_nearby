@@ -16,27 +16,21 @@
           dataType: 'json',
           crossDomain: true,
           success: function(data) {
-            var bikeStations, nearest, newDistance, station, _i, _len;
+            var bikeStations, closestStations, i, station, _i;
             log(data);
             bikeStations = data.stationBeanList;
-            nearest = {
-              distance: null,
-              station: null
-            };
-            for (_i = 0, _len = bikeStations.length; _i < _len; _i++) {
-              station = bikeStations[_i];
-              newDistance = _this.simpleDistance(coords, station);
-              if (newDistance < nearest.distance || nearest.distance === null) {
-                nearest.distance = newDistance;
-                nearest.distanceInMiles = distance.metersToMiles(distance.getDistance(station, coords));
-                nearest.station = station;
-                log("New nearest station is:", nearest.station.stAddress1);
-                log("New distance is:", nearest.distance);
-              }
+            bikeStations.sort(function(station1, station2) {
+              return _this.simpleDistance(coords, station1) - _this.simpleDistance(coords, station2);
+            });
+            closestStations = [];
+            for (i = _i = 0; _i <= 5; i = ++_i) {
+              station = bikeStations[i];
+              station.distanceInMiles = distance.metersToMiles(distance.getDistance(station, coords));
+              closestStations.push(station);
             }
-            log("Nearest station is:", nearest);
+            log("Nearest station is:", closestStations[0]);
             if (_this.callback != null) {
-              return _this.callback(nearest.station);
+              return _this.callback(closestStations);
             }
           }
         });
