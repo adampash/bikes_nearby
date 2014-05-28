@@ -28,6 +28,9 @@ findNearestStation = (coords) ->
         newDistance = getDistance(coords, station)
         if newDistance < nearest.distance or nearest.distance is null
           nearest.distance = newDistance
+          nearest.distanceInMiles = distance.metersToMiles(
+            distance.getDistance(station, coords)
+          )
           nearest.station = station
           log "New nearest station is:", nearest.station.stAddress1
           log "New distance is:", nearest.distance
