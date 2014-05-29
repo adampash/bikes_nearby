@@ -1,7 +1,8 @@
 (function() {
   'use strict';
-  var setNearest,
-    _this = this;
+  var getStations, nearestStations, setNearest;
+
+  nearestStations = [];
 
   chrome.runtime.onInstalled.addListener(function(details) {
     return log('previousVersion', details.previousVersion);
@@ -16,16 +17,28 @@
     });
   };
 
-  if (navigator.geolocation != null) {
-    bikes.getBikeData(function(stations) {
+  getStations = function() {
+    var _this = this;
+    return bikes.getBikeData(function(stations) {
+      log(stations);
+      nearestStations = stations;
       return setNearest(stations[0]);
     });
+  };
+
+  if (navigator.geolocation != null) {
+    getStations();
     setInterval(function() {
-      var _this = this;
-      return bikes.getBikeData(function(stations) {
-        return setNearest(stations[0]);
-      });
+      return getStations();
     }, 60 * 1000);
   }
+
+  chrome.extension.onConnect.addListener(function(port) {
+    log("Connected .....");
+    return port.onMessage.addListener(function(msg) {
+      log("message recieved " + msg);
+      return port.postMessage(nearestStations);
+    });
+  });
 
 }).call(this);
