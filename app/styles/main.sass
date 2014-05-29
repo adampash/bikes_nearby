@@ -1,4 +1,47 @@
 $padding: 20px
+$lightgray: rgb(180, 180, 180)
+$darkgray: rgb(80, 80, 80)
+$blue: rgb(0, 0, 250)
+$font: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif
+$rowheight: 62px
+
 body
-  width: 100px
-  padding: $padding
+  width: 400px
+  // background: url("/images/mock.png")
+  // height: 500px
+  font-family: $font
+  font-weight: 300
+  padding: 0
+  margin: 0
+
+.station
+  height: $rowheight
+  line-height: $rowheight
+  border-top: 1px solid $lightgray
+  cursor: pointer
+  &+.station
+    border-top: 1px solid $lightgray
+  div
+    float: left
+    &.numbikes
+      color: $blue
+      font-size: 40px
+      width: 86px
+      text-align: center
+    &.name
+      color: $darkgray
+      font-weight: bold
+      font-size: 16px
+      margin-right: 10px
+    &.eta
+      color: $blue
+      font-size: 14px
+  &.header
+    cursor: text
+    border-top: none
+    .numbikes
+      background: url("/images/bike.png")
+      // background: $lightgray
+      // background: white
+    .name
+      color: $lightgray

@@ -14,13 +14,15 @@
     var $station, index, station, _i, _len, _results;
     console.log("message recieved" + msg);
     nearestStations = msg;
-    $('body').html('');
+    $('.stations').html('');
     _results = [];
     for (index = _i = 0, _len = nearestStations.length; _i < _len; index = ++_i) {
       station = nearestStations[index];
-      $('body').append('<div class="station' + index + '"></div>');
+      $('body').append('<div class="station station' + index + '"></div>');
       $station = $('.station' + index);
-      _results.push($station.text(station.stationName + ': ' + station.availableBikes));
+      $station.append('<div class="numbikes">' + station.availableBikes + '</div>');
+      $station.append('<div class="name">' + station.stationName + '</div>');
+      _results.push($station.append('<div class="eta">5 min</div>'));
     }
     return _results;
   });
