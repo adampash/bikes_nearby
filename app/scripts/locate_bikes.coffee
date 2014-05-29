@@ -16,6 +16,7 @@
           bikeStations = data.stationBeanList
           bikeStations.sort (station1, station2) =>
             @simpleDistance(coords, station1) - @simpleDistance(coords, station2)
+            # station2.stationName.length - station1.stationName.length
           closestStations = []
           for i in [0..5]
             station = bikeStations[i]
