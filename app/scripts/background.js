@@ -1,10 +1,12 @@
 (function() {
   'use strict';
-  var currentLocation, getStations, nearestStations, setNearest;
+  var checkTime, currentLocation, getStations, lastUpdated, nearestStations, sendData, setNearest;
 
   nearestStations = [];
 
   currentLocation = null;
+
+  lastUpdated = null;
 
   chrome.runtime.onInstalled.addListener(function(details) {
     return log('previousVersion', details.previousVersion);
@@ -19,13 +21,23 @@
     });
   };
 
-  getStations = function() {
+  getStations = function(callback) {
     var _this = this;
     return bikes.getBikeData(function(stations, location) {
       nearestStations = stations;
       currentLocation = location;
-      return setNearest(stations[0]);
+      lastUpdated = new Date();
+      setNearest(stations[0]);
+      if (callback != null) {
+        return callback();
+      }
     });
+  };
+
+  checkTime = function() {
+    if ((new Date() - lastUpdated) / 1000 > 60) {
+      return getStations();
+    }
   };
 
   if (navigator.geolocation != null) {
@@ -33,18 +45,31 @@
     setInterval(function() {
       return getStations();
     }, 60 * 1000);
+    setInterval(function() {
+      return checkTime();
+    }, 1000);
   }
+
+  sendData = function(port) {
+    var data;
+    data = {
+      nearestStations: nearestStations,
+      currentLocation: currentLocation
+    };
+    return port.postMessage(data);
+  };
 
   chrome.extension.onConnect.addListener(function(port) {
     log("Connected .....");
     return port.onMessage.addListener(function(msg) {
-      var data;
       log("message recieved " + msg);
-      data = {
-        nearestStations: nearestStations,
-        currentLocation: currentLocation
-      };
-      return port.postMessage(data);
+      if (nearestStations.length === 0) {
+        return getStations(function() {
+          return sendData(port);
+        });
+      } else {
+        return sendData(port);
+      }
     });
   });
 
