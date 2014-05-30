@@ -2,15 +2,34 @@
   (function(exports) {
     var bikes;
     bikes = {
+      bikeShares: [
+        {
+          city: 'New York City',
+          url: 'http://www.citibikenyc.com/stations/json',
+          latitude: 40.7127,
+          longitude: 74.0059
+        }, {
+          city: 'Chicago',
+          url: 'http://www.divvybikes.com/stations/json',
+          latitude: 41.8819,
+          longitude: 87.6278
+        }, {
+          city: 'San Francisco',
+          url: 'https://www.bayareabikeshare.com/stations/json',
+          latitude: 37.7833,
+          longitude: 122.4167
+        }
+      ],
       simpleDistance: function(coords, station) {
         return Math.abs(coords.latitude - station.latitude) + Math.abs(coords.longitude - station.longitude);
       },
       findNearestStation: function(coords) {
         var bikeJSON,
           _this = this;
-        bikeJSON = 'http://www.citibikenyc.com/stations/json';
-        'https://www.bayareabikeshare.com/stations/json';
-        'http://www.divvybikes.com/stations/json';
+        this.bikeShares.sort(function(city1, city2) {
+          return _this.simpleDistance(coords, city1) - _this.simpleDistance(coords, city2);
+        });
+        bikeJSON = this.bikeShares[0].url;
         return $.ajax({
           url: bikeJSON,
           dataType: 'json',

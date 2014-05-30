@@ -1,12 +1,30 @@
 ((exports) ->
   bikes =
+    bikeShares: [
+      city: 'New York City'
+      url: 'http://www.citibikenyc.com/stations/json'
+      latitude: 40.7127
+      longitude: 74.0059
+    ,
+      city: 'Chicago'
+      url: 'http://www.divvybikes.com/stations/json'
+      latitude: 41.8819
+      longitude: 87.6278
+    ,
+      city: 'San Francisco'
+      url: 'https://www.bayareabikeshare.com/stations/json'
+      latitude: 37.7833
+      longitude: 122.4167
+    ]
     simpleDistance: (coords, station) ->
       Math.abs(coords.latitude - station.latitude) + Math.abs(coords.longitude - station.longitude)
 
     findNearestStation: (coords) ->
-      bikeJSON = 'http://www.citibikenyc.com/stations/json'
-      'https://www.bayareabikeshare.com/stations/json'
-      'http://www.divvybikes.com/stations/json'
+      @bikeShares.sort (city1, city2) =>
+        @simpleDistance(coords, city1) - @simpleDistance(coords, city2)
+
+      bikeJSON = @bikeShares[0].url
+
       $.ajax
         url: bikeJSON
         dataType: 'json'
