@@ -25,7 +25,7 @@
               )
               closestStations.push station
           log "Nearest station is:", closestStations[0]
-          @callback closestStations if @callback?
+          @callback closestStations, coords if @callback?
 
     fetchBikesNear: (position) ->
       log position

@@ -1,8 +1,10 @@
 (function() {
   'use strict';
-  var getStations, nearestStations, setNearest;
+  var currentLocation, getStations, nearestStations, setNearest;
 
   nearestStations = [];
+
+  currentLocation = null;
 
   chrome.runtime.onInstalled.addListener(function(details) {
     return log('previousVersion', details.previousVersion);
@@ -19,9 +21,9 @@
 
   getStations = function() {
     var _this = this;
-    return bikes.getBikeData(function(stations) {
-      log(stations);
+    return bikes.getBikeData(function(stations, location) {
       nearestStations = stations;
+      currentLocation = location;
       return setNearest(stations[0]);
     });
   };
@@ -36,8 +38,13 @@
   chrome.extension.onConnect.addListener(function(port) {
     log("Connected .....");
     return port.onMessage.addListener(function(msg) {
+      var data;
       log("message recieved " + msg);
-      return port.postMessage(nearestStations);
+      data = {
+        nearestStations: nearestStations,
+        currentLocation: currentLocation
+      };
+      return port.postMessage(data);
     });
   });
 

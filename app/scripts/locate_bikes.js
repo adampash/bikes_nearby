@@ -30,7 +30,7 @@
             }
             log("Nearest station is:", closestStations[0]);
             if (_this.callback != null) {
-              return _this.callback(closestStations);
+              return _this.callback(closestStations, coords);
             }
           }
         });

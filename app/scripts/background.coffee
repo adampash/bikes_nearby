@@ -1,6 +1,7 @@
 'use strict';
 
 nearestStations = []
+currentLocation = null
 chrome.runtime.onInstalled.addListener (details) ->
     log('previousVersion', details.previousVersion)
 
@@ -9,9 +10,9 @@ setNearest = (station) ->
   chrome.browserAction.setBadgeText({text: "" + station.availableBikes})
 
 getStations = ->
-  bikes.getBikeData (stations) =>
-    log stations
+  bikes.getBikeData (stations, location) =>
     nearestStations = stations
+    currentLocation = location
     setNearest(stations[0])
 
 if navigator.geolocation?
@@ -25,4 +26,7 @@ chrome.extension.onConnect.addListener (port) ->
   log("Connected .....")
   port.onMessage.addListener (msg) ->
         log("message recieved "+ msg)
-        port.postMessage(nearestStations)
+        data =
+          nearestStations: nearestStations
+          currentLocation: currentLocation
+        port.postMessage(data)
