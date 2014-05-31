@@ -1,2 +1,1 @@
 Icon should be grayed out if not within city threshhold (and message displayed on popup click)
-Convert distance to human-friendly — e.g., < 0.1 miles, 0.1, 0.2, etc.

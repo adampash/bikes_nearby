@@ -18,9 +18,13 @@ getStations = (callback) ->
       lastUpdated = new Date()
       setNearest(stations[0])
       callback() if callback?
+      # chrome.browserAction.setIcon
+      #   path: "/images/icon-19.png"
     else
       log 'too far away'
       lastUpdated = new Date()
+      # chrome.browserAction.setIcon
+      #   path: "/images/icon-19-inactive.png"
 
 checkTime = ->
   if (new Date() - lastUpdated)/1000 > 60
