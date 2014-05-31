@@ -20,12 +20,15 @@ body
   background: $lightgray
 
 .station
+  opacity: 0.6
   height: $rowheight
   line-height: $rowheight
   border-top: 1px solid $lightgray
   cursor: pointer
   &+.station
     border-top: 1px solid $lightgray
+  &.active
+    opacity: 1
   div
     float: left
     &.numbikes
@@ -43,6 +46,7 @@ body
       font-size: 14px
   &.header
     cursor: text
+    opacity: 1
     border-top: none
     .numbikes
       background: url("/images/bike.png")

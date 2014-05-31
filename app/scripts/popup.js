@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  var dropMarker, embedMap, getEta, infowindow, map, marker, nearestStations, port, showInfoWindow, stationLatLng, youLatLng, zoomToFit;
+  var activateStation, dropMarker, embedMap, getEta, infowindow, map, marker, nearestStations, port, showInfoWindow, stationLatLng, youLatLng, zoomToFit;
 
   map = null;
 
@@ -28,7 +28,8 @@
     mapOptions = {
       zoom: 15,
       center: youLatLng,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      disableDefaultUI: true
     };
     map = new google.maps.Map(document.getElementById("mapcanvas"), mapOptions);
     return new google.maps.Marker({
@@ -66,6 +67,12 @@
     return map.fitBounds(bounds);
   };
 
+  activateStation = function(station, index) {
+    dropMarker(station);
+    $('.station').removeClass('active');
+    return $('.station' + index).addClass('active');
+  };
+
   nearestStations = [];
 
   port = chrome.extension.connect({
@@ -79,30 +86,35 @@
       _this = this;
     nearestStations = data.nearestStations;
     currentLocation = data.currentLocation;
+    console.log(currentLocation);
     embedMap(currentLocation);
     startPoint = new google.maps.LatLng(currentLocation.latitude, currentLocation.longitude);
-    $('.stations').html('');
-    for (index = _i = 0, _len = nearestStations.length; _i < _len; index = ++_i) {
-      station = nearestStations[index];
-      $('.stations').append('<div class="station station' + index + '"></div>');
-      $station = $('.station' + index);
-      $station.append('<div class="numbikes">' + station.availableBikes + '</div>');
-      $station.append('<div class="name">' + station.stationName + '</div>');
-      request = {
-        origin: startPoint,
-        destination: station.latitude + ',' + station.longitude,
-        travelMode: google.maps.TravelMode.WALKING
-      };
-      getEta(request, $station);
+    if (nearestStations.length > 0) {
+      $('.stations').html('');
+      for (index = _i = 0, _len = nearestStations.length; _i < _len; index = ++_i) {
+        station = nearestStations[index];
+        $('.stations').append('<div class="station station' + index + '"></div>');
+        $station = $('.station' + index);
+        $station.append('<div class="numbikes">' + station.availableBikes + '</div>');
+        $station.append('<div class="name">' + station.stationName + '</div>');
+        request = {
+          origin: startPoint,
+          destination: station.latitude + ',' + station.longitude,
+          travelMode: google.maps.TravelMode.WALKING
+        };
+        getEta(request, $station);
+      }
+      activateStation(nearestStations[0], 0);
+      setTimeout(function() {
+        return $('.stations .station').first().click();
+      }, 300);
+    } else {
+      $('.station.header .name').text("No bikes near your location");
     }
-    dropMarker(nearestStations[0]);
-    setTimeout(function() {
-      return $('.stations .station').first().click();
-    }, 300);
     return $('.stations .station').click(function(event) {
       marker.setMap(null);
       index = $(this).index();
-      return dropMarker(nearestStations[index]);
+      return activateStation(nearestStations[index], index);
     });
   });
 

@@ -24,9 +24,9 @@
   getStations = function(callback) {
     var _this = this;
     return bikes.getBikeData(function(stations, location) {
+      currentLocation = location;
       if (stations) {
         nearestStations = stations;
-        currentLocation = location;
         lastUpdated = new Date();
         setNearest(stations[0]);
         if (callback != null) {
@@ -34,7 +34,10 @@
         }
       } else {
         log('too far away');
-        return lastUpdated = new Date();
+        lastUpdated = new Date();
+        if (callback != null) {
+          return callback();
+        }
       }
     });
   };
@@ -67,6 +70,7 @@
   chrome.extension.onConnect.addListener(function(port) {
     log("Connected .....");
     return port.onMessage.addListener(function(msg) {
+      var _this = this;
       log("message recieved " + msg);
       if (nearestStations.length === 0) {
         return getStations(function() {

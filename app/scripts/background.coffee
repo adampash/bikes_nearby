@@ -12,9 +12,9 @@ setNearest = (station) ->
 
 getStations = (callback) ->
   bikes.getBikeData (stations, location) =>
+    currentLocation = location
     if stations
       nearestStations = stations
-      currentLocation = location
       lastUpdated = new Date()
       setNearest(stations[0])
       callback() if callback?
@@ -23,6 +23,7 @@ getStations = (callback) ->
     else
       log 'too far away'
       lastUpdated = new Date()
+      callback() if callback?
       # chrome.browserAction.setIcon
       #   path: "/images/icon-19-inactive.png"
 
@@ -52,7 +53,7 @@ chrome.extension.onConnect.addListener (port) ->
     log("message recieved "+ msg)
     if nearestStations.length is 0
       # fetch nearest and then postMessage
-      getStations ->
+      getStations =>
         sendData(port)
     else
       sendData(port)
