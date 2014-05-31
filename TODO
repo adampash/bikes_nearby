@@ -1,1 +1,2 @@
+Display message in popup if too far away from station
 Icon should be grayed out if not within city threshhold (and message displayed on popup click)

@@ -42,7 +42,7 @@
           if distance.getDistance(bikeStations[0], coords) > 48280
             closestStations = false
           else
-            for i in [0..5]
+            for i in [0..4]
               station = bikeStations[i]
               station.distanceInMiles = distance.metersToMiles(
                   distance.getDistance(station, coords)

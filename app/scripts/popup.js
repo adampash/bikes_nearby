@@ -1,6 +1,16 @@
 (function() {
   'use strict';
-  var getEta, nearestStations, port;
+  var dropMarker, embedMap, getEta, infowindow, map, marker, nearestStations, port, showInfoWindow, stationLatLng, youLatLng, zoomToFit;
+
+  map = null;
+
+  marker = null;
+
+  youLatLng = null;
+
+  stationLatLng = null;
+
+  infowindow = null;
 
   getEta = function(request, $station) {
     var directionsService;
@@ -12,6 +22,50 @@
     });
   };
 
+  embedMap = function(currentLocation) {
+    var mapOptions;
+    youLatLng = new google.maps.LatLng(currentLocation.latitude, currentLocation.longitude);
+    mapOptions = {
+      zoom: 15,
+      center: youLatLng,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    map = new google.maps.Map(document.getElementById("mapcanvas"), mapOptions);
+    return new google.maps.Marker({
+      position: youLatLng,
+      map: map,
+      title: "You",
+      icon: "images/you.png"
+    });
+  };
+
+  dropMarker = function(station) {
+    stationLatLng = new google.maps.LatLng(station.latitude, station.longitude);
+    marker = new google.maps.Marker({
+      position: stationLatLng,
+      map: map,
+      title: station.stationName,
+      icon: "images/you.png"
+    });
+    showInfoWindow(station);
+    return zoomToFit();
+  };
+
+  showInfoWindow = function(station) {
+    infowindow = new google.maps.InfoWindow({
+      content: station.availableBikes + ' bikes; ' + station.availableDocks + ' docks'
+    });
+    return infowindow.open(map, marker);
+  };
+
+  zoomToFit = function() {
+    var bounds;
+    bounds = new google.maps.LatLngBounds();
+    bounds.extend(youLatLng);
+    bounds.extend(stationLatLng);
+    return map.fitBounds(bounds);
+  };
+
   nearestStations = [];
 
   port = chrome.extension.connect({
@@ -21,9 +75,11 @@
   port.postMessage("Fetch data");
 
   port.onMessage.addListener(function(data) {
-    var $station, currentLocation, index, request, startPoint, station, _i, _len;
+    var $station, currentLocation, index, request, startPoint, station, _i, _len,
+      _this = this;
     nearestStations = data.nearestStations;
     currentLocation = data.currentLocation;
+    embedMap(currentLocation);
     startPoint = new google.maps.LatLng(currentLocation.latitude, currentLocation.longitude);
     $('.stations').html('');
     for (index = _i = 0, _len = nearestStations.length; _i < _len; index = ++_i) {
@@ -39,11 +95,14 @@
       };
       getEta(request, $station);
     }
+    dropMarker(nearestStations[0]);
+    setTimeout(function() {
+      return $('.stations .station').first().click();
+    }, 300);
     return $('.stations .station').click(function(event) {
-      var url;
+      marker.setMap(null);
       index = $(this).index();
-      url = 'https://www.google.com/maps/dir/' + currentLocation.latitude + ',' + currentLocation.longitude + '/' + nearestStations[index].latitude + ',' + nearestStations[index].longitude;
-      return window.open(url);
+      return dropMarker(nearestStations[index]);
     });
   });
 

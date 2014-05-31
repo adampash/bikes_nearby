@@ -45,7 +45,7 @@
             if (distance.getDistance(bikeStations[0], coords) > 48280) {
               closestStations = false;
             } else {
-              for (i = _i = 0; _i <= 5; i = ++_i) {
+              for (i = _i = 0; _i <= 4; i = ++_i) {
                 station = bikeStations[i];
                 station.distanceInMiles = distance.metersToMiles(distance.getDistance(station, coords));
                 closestStations.push(station);
