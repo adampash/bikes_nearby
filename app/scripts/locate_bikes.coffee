@@ -15,6 +15,21 @@
       url: 'https://www.bayareabikeshare.com/stations/json'
       latitude: 37.7833
       longitude: -122.4167
+    ,
+      city: 'Columbus'
+      url: 'http://www.cogobikeshare.com/stations/json'
+      latitude: 39.9833
+      longitude: -82.9833
+    ,
+      city: 'Aspen'
+      url: 'https://www.we-cycle.org/pbsc/stations.php'
+      latitude: 39.1922
+      longitude: -106.8244
+    ,
+      city: 'Chattanooga'
+      url: 'http://www.bikechattanooga.com/stations/json'
+      latitude: 35.0456
+      longitude: -85.2672
     ]
     simpleDistance: (coords, station) ->
       Math.abs(coords.latitude - station.latitude) + Math.abs(coords.longitude - station.longitude)
@@ -32,6 +47,21 @@
       # coords =
       #   latitude: 37.7833
       #   longitude: -122.4167
+      # Columbus
+      # coords =
+      #   latitude: 39.9833
+      #   longitude: -82.9833
+      # Aspen
+      # coords =
+      #   latitude: 39.1922
+      #   longitude: -106.8244
+      # Chattanooga
+      # coords =
+      #   latitude: 35.0456
+      #   longitude: -85.2672
+
+
+
       @bikeShares.sort (city1, city2) =>
         @simpleDistance(coords, city1) - @simpleDistance(coords, city2)
 

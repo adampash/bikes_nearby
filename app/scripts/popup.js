@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  var activateStation, dropMarker, embedMap, getEta, infowindow, map, marker, nearestStations, port, showInfoWindow, stationLatLng, youLatLng, zoomToFit;
+  var activateStation, drawPath, dropMarker, embedMap, getEta, infowindow, map, marker, nearestStations, path, port, showInfoWindow, stationLatLng, youLatLng, zoomToFit;
 
   map = null;
 
@@ -12,13 +12,19 @@
 
   infowindow = null;
 
-  getEta = function(request, $station) {
+  path = null;
+
+  getEta = function(request, $station, index, callback) {
     var directionsService;
     directionsService = new google.maps.DirectionsService();
     return directionsService.route(request, function(result, status) {
       var duration;
       duration = result.routes[0].legs[0].duration.text;
-      return $station.append('<div class="eta">' + duration + '</div>');
+      $station.append('<div class="eta">' + duration + '</div>');
+      nearestStations[index].directions = result;
+      if (callback != null) {
+        return callback();
+      }
     });
   };
 
@@ -28,8 +34,7 @@
     mapOptions = {
       zoom: 15,
       center: youLatLng,
-      mapTypeId: google.maps.MapTypeId.ROADMAP,
-      disableDefaultUI: true
+      mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     map = new google.maps.Map(document.getElementById("mapcanvas"), mapOptions);
     return new google.maps.Marker({
@@ -42,14 +47,35 @@
 
   dropMarker = function(station) {
     stationLatLng = new google.maps.LatLng(station.latitude, station.longitude);
-    marker = new google.maps.Marker({
+    return marker = new google.maps.Marker({
       position: stationLatLng,
       map: map,
       title: station.stationName,
       icon: "images/you.png"
     });
-    showInfoWindow(station);
-    return zoomToFit();
+  };
+
+  drawPath = function(index) {
+    var directions, lineSymbol;
+    directions = nearestStations[index].directions;
+    lineSymbol = {
+      path: 'M 0,-1 0,1',
+      strokeOpacity: 1,
+      scale: 4
+    };
+    path = new google.maps.Polyline({
+      path: directions.routes[0].overview_path,
+      strokeOpacity: 0,
+      icons: [
+        {
+          icon: lineSymbol,
+          offset: '0',
+          repeat: '15px'
+        }
+      ],
+      strokeColor: '#0000FF'
+    });
+    return path.setMap(map);
   };
 
   showInfoWindow = function(station) {
@@ -68,10 +94,28 @@
   };
 
   activateStation = function(station, index) {
+    console.log('activate station ' + index);
     dropMarker(station);
+    showInfoWindow(station);
+    zoomToFit();
+    drawPath(index);
     $('.station').removeClass('active');
     return $('.station' + index).addClass('active');
   };
+
+  Mousetrap.bind(['down', 'j'], function() {
+    $('.station.active').removeClass('active').next().addClass('active').click();
+    if ($('.station.active').length === 0) {
+      return $('.station').last().addClass('active');
+    }
+  });
+
+  Mousetrap.bind(['up', 'k'], function() {
+    $('.station.active').removeClass('active').prev().addClass('active').click();
+    if ($('.station.active').length === 0) {
+      return $('.stations .station').first().addClass('active');
+    }
+  });
 
   nearestStations = [];
 
@@ -82,7 +126,7 @@
   port.postMessage("Fetch data");
 
   port.onMessage.addListener(function(data) {
-    var $station, currentLocation, index, request, startPoint, station, _i, _len,
+    var $station, currentLocation, firstCallback, index, request, startPoint, station, _i, _len,
       _this = this;
     nearestStations = data.nearestStations;
     currentLocation = data.currentLocation;
@@ -102,17 +146,27 @@
           destination: station.latitude + ',' + station.longitude,
           travelMode: google.maps.TravelMode.WALKING
         };
-        getEta(request, $station);
+        if (index === 0) {
+          firstCallback = function() {
+            return setTimeout(function() {
+              return $('.stations .station').first().click();
+            }, 300);
+          };
+        }
+        getEta(request, $station, index, firstCallback);
       }
-      activateStation(nearestStations[0], 0);
-      setTimeout(function() {
-        return $('.stations .station').first().click();
-      }, 300);
     } else {
       $('.station.header .name').text("No bikes near your location");
     }
     return $('.stations .station').click(function(event) {
-      marker.setMap(null);
+      if (marker != null) {
+        marker.setMap(null);
+      }
+      marker = null;
+      if (path != null) {
+        path.setMap(null);
+      }
+      path = null;
       index = $(this).index();
       return activateStation(nearestStations[index], index);
     });

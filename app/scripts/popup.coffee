@@ -5,12 +5,16 @@ marker = null
 youLatLng = null
 stationLatLng = null
 infowindow = null
+path = null
 
-getEta = (request, $station) ->
+getEta = (request, $station, index, callback) ->
   directionsService = new google.maps.DirectionsService()
   directionsService.route request, (result, status) ->
     duration = result.routes[0].legs[0].duration.text
     $station.append('<div class="eta">' + duration + '</div>')
+    nearestStations[index].directions = result
+    callback() if callback?
+
 
 embedMap = (currentLocation) ->
   youLatLng = new google.maps.LatLng(currentLocation.latitude, currentLocation.longitude)
@@ -18,7 +22,7 @@ embedMap = (currentLocation) ->
     zoom: 15
     center: youLatLng
     mapTypeId: google.maps.MapTypeId.ROADMAP
-    disableDefaultUI: true
+    # disableDefaultUI: true
 
   map = new google.maps.Map(document.getElementById("mapcanvas"),
     mapOptions)
@@ -36,8 +40,25 @@ dropMarker = (station) ->
     map: map
     title: station.stationName
     icon: "images/you.png"
-  showInfoWindow(station)
-  zoomToFit()
+
+drawPath = (index) ->
+  directions = nearestStations[index].directions
+  lineSymbol =
+    path: 'M 0,-1 0,1'
+    strokeOpacity: 1
+    scale: 4
+  path = new google.maps.Polyline
+    path: directions.routes[0].overview_path
+    # geodesic: true
+    strokeOpacity: 0
+    icons: [
+      icon: lineSymbol
+      offset: '0'
+      repeat: '15px'
+    ]
+    strokeColor: '#0000FF'
+    # strokeWeight: 2
+  path.setMap(map)
 
 showInfoWindow = (station) ->
   infowindow = new google.maps.InfoWindow
@@ -51,9 +72,28 @@ zoomToFit = ->
   map.fitBounds(bounds)
 
 activateStation = (station, index) ->
+  console.log 'activate station ' + index
   dropMarker(station)
+  showInfoWindow(station)
+  zoomToFit()
+  drawPath(index)
   $('.station').removeClass('active')
   $('.station' + index).addClass('active')
+
+Mousetrap.bind ['down', 'j'], ->
+  $('.station.active')
+    .removeClass('active')
+    .next().addClass('active').click()
+  if $('.station.active').length is 0
+    $('.station').last().addClass('active')
+
+Mousetrap.bind ['up', 'k'], ->
+  $('.station.active')
+    .removeClass('active')
+    .prev().addClass('active').click()
+  if $('.station.active').length is 0
+    $('.stations .station').first().addClass('active')
+
 
 nearestStations = []
 port = chrome.extension.connect(name: "Sample Communication")
@@ -78,17 +118,22 @@ port.onMessage.addListener (data) ->
         destination: station.latitude + ',' + station.longitude
         travelMode: google.maps.TravelMode.WALKING
 
-      getEta(request, $station)
+      if index == 0
+        firstCallback = =>
+          # activateStation(nearestStations[0], 0)
+          setTimeout =>
+            $('.stations .station').first().click()
+          , 300
+      getEta(request, $station, index, firstCallback)
 
-    activateStation(nearestStations[0], 0)
-    setTimeout =>
-      $('.stations .station').first().click()
-    , 300
   else
     $('.station.header .name').text "No bikes near your location"
 
 
   $('.stations .station').click (event) ->
-    marker.setMap(null)
+    marker.setMap(null) if marker?
+    marker = null
+    path.setMap(null) if path?
+    path = null
     index = $(this).index()
     activateStation(nearestStations[index], index)
