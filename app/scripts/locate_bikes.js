@@ -42,10 +42,14 @@
               return _this.simpleDistance(coords, station1) - _this.simpleDistance(coords, station2);
             });
             closestStations = [];
-            for (i = _i = 0; _i <= 5; i = ++_i) {
-              station = bikeStations[i];
-              station.distanceInMiles = distance.metersToMiles(distance.getDistance(station, coords));
-              closestStations.push(station);
+            if (distance.getDistance(bikeStations[0], coords) > 48280) {
+              closestStations = false;
+            } else {
+              for (i = _i = 0; _i <= 5; i = ++_i) {
+                station = bikeStations[i];
+                station.distanceInMiles = distance.metersToMiles(distance.getDistance(station, coords));
+                closestStations.push(station);
+              }
             }
             log("Nearest station is:", closestStations[0]);
             if (_this.callback != null) {

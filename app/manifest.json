@@ -28,7 +28,9 @@
   },
   "permissions": [
     "geolocation",
-    "http://www.citibikenyc.com/stations/json"
+    "http://www.citibikenyc.com/stations/json",
+    "http://www.divvybikes.com/stations/json",
+    "https://www.bayareabikeshare.com/stations/json"
   ],
     "content_security_policy": "script-src 'self' 'unsafe-eval' https://maps.googleapis.com https://maps.gstatic.com; object-src 'self'"
 }

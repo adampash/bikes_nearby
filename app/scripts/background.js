@@ -24,12 +24,17 @@
   getStations = function(callback) {
     var _this = this;
     return bikes.getBikeData(function(stations, location) {
-      nearestStations = stations;
-      currentLocation = location;
-      lastUpdated = new Date();
-      setNearest(stations[0]);
-      if (callback != null) {
-        return callback();
+      if (stations) {
+        nearestStations = stations;
+        currentLocation = location;
+        lastUpdated = new Date();
+        setNearest(stations[0]);
+        if (callback != null) {
+          return callback();
+        }
+      } else {
+        log('too far away');
+        return lastUpdated = new Date();
       }
     });
   };
@@ -47,7 +52,7 @@
     }, 60 * 1000);
     setInterval(function() {
       return checkTime();
-    }, 1000);
+    }, 5000);
   }
 
   sendData = function(port) {

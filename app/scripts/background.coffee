@@ -12,11 +12,15 @@ setNearest = (station) ->
 
 getStations = (callback) ->
   bikes.getBikeData (stations, location) =>
-    nearestStations = stations
-    currentLocation = location
-    lastUpdated = new Date()
-    setNearest(stations[0])
-    callback() if callback?
+    if stations
+      nearestStations = stations
+      currentLocation = location
+      lastUpdated = new Date()
+      setNearest(stations[0])
+      callback() if callback?
+    else
+      log 'too far away'
+      lastUpdated = new Date()
 
 checkTime = ->
   if (new Date() - lastUpdated)/1000 > 60
@@ -30,7 +34,7 @@ if navigator.geolocation?
   , 60 * 1000
   setInterval ->
     checkTime()
-  , 1000
+  , 5000
 
 sendData = (port) ->
   data =
