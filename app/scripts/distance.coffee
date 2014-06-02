@@ -30,4 +30,4 @@ unless Number.prototype.toRad?
       distInMeters / metersInMile
 
   exports.distance = distance
-)(if typeof exports == 'undefined' then @ else exports)
+)(exports ? @)

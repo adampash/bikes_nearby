@@ -141,6 +141,9 @@
         $station = $('.station' + index);
         $station.append('<div class="numbikes">' + station.availableBikes + '</div>');
         $station.append('<div class="name">' + station.stationName + '</div>');
+        if (index === 0) {
+          $station.addClass('active');
+        }
         request = {
           origin: startPoint,
           destination: station.latitude + ',' + station.longitude,

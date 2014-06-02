@@ -112,6 +112,7 @@ port.onMessage.addListener (data) ->
       # $station.text(station.stationName + ': ' + station.availableBikes)
       $station.append('<div class="numbikes">' + station.availableBikes + '</div>')
       $station.append('<div class="name">' + station.stationName + '</div>')
+      $station.addClass('active') if index is 0
 
       request =
         origin: startPoint

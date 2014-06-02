@@ -32,6 +32,6 @@
       }
     };
     return exports.distance = distance;
-  })(typeof exports === 'undefined' ? this : exports);
+  })(typeof exports !== "undefined" && exports !== null ? exports : this);
 
 }).call(this);

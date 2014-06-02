@@ -1,5 +1,5 @@
 (function() {
-  (function(exports) {
+  (function(exports, $, distance, log) {
     var bikes;
     bikes = {
       bikeShares: [
@@ -44,15 +44,14 @@
         this.bikeShares.sort(function(city1, city2) {
           return _this.simpleDistance(coords, city1) - _this.simpleDistance(coords, city2);
         });
-        debugger;
         bikeJSON = this.bikeShares[0].url;
+        log('OMG', bikeJSON);
         return $.ajax({
           url: bikeJSON,
           dataType: 'json',
           crossDomain: true,
           success: function(data) {
             var bikeStations, closestStations, i, station, _i;
-            log(data);
             bikeStations = data.stationBeanList;
             bikeStations.sort(function(station1, station2) {
               return _this.simpleDistance(coords, station1) - _this.simpleDistance(coords, station2);
@@ -67,15 +66,16 @@
                 closestStations.push(station);
               }
             }
-            log("Nearest station is:", closestStations[0]);
             if (_this.callback != null) {
               return _this.callback(closestStations, coords);
             }
           }
         });
       },
-      fetchBikesNear: function(position) {
-        log(position);
+      fetchBikesNear: function(position, callback) {
+        if (callback != null) {
+          this.callback = callback;
+        }
         return bikes = this.findNearestStation(position.coords);
       },
       getBikeData: function(callback) {
@@ -87,6 +87,6 @@
       }
     };
     return exports.bikes = bikes;
-  })(typeof exports === 'undefined' ? this : exports);
+  })(typeof exports !== "undefined" && exports !== null ? exports : this, typeof $ !== "undefined" && $ !== null ? $ : require('_helpers').$, typeof distance !== "undefined" && distance !== null ? distance : require('distance').distance, typeof log !== "undefined" && log !== null ? log : require('_helpers').log);
 
 }).call(this);

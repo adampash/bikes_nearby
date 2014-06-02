@@ -1,8 +1,8 @@
-$ ->
-  window.dev = true
-  window.log = (args) ->
+((exports) ->
+  dev = true
+  log = (args) ->
     if dev
       console.log.apply console,  arguments
 
-  if dev
-    $('body').append $('<script src="//localhost:35729/livereload.js"></script>')
+  exports.log = log
+)(exports ? @)

@@ -1,4 +1,4 @@
-((exports) ->
+((exports, $, distance, log) ->
   bikes =
     bikeShares: [
       city: 'New York City'
@@ -65,15 +65,14 @@
       @bikeShares.sort (city1, city2) =>
         @simpleDistance(coords, city1) - @simpleDistance(coords, city2)
 
-      debugger
       bikeJSON = @bikeShares[0].url
+      log 'OMG', bikeJSON
 
       $.ajax
         url: bikeJSON
         dataType: 'json'
         crossDomain: true
         success: (data) =>
-          log data
           bikeStations = data.stationBeanList
           bikeStations.sort (station1, station2) =>
             @simpleDistance(coords, station1) - @simpleDistance(coords, station2)
@@ -86,15 +85,14 @@
               station = bikeStations[i]
               station.distanceInMiles = distance.metersToMiles(
                   distance.getDistance(station, coords)
-                )
-                closestStations.push station
-          log "Nearest station is:", closestStations[0]
+              )
+              closestStations.push station
 
           # if you're over 30 miles (48280.3m) from the closest station return false
           @callback closestStations, coords if @callback?
 
-    fetchBikesNear: (position) ->
-      log position
+    fetchBikesNear: (position, callback) ->
+      @callback = callback if callback?
       bikes = @findNearestStation(position.coords)
 
     getBikeData: (@callback) ->
@@ -102,5 +100,8 @@
         @fetchBikesNear(position)
 
   exports.bikes = bikes
-  # debugger
-)(if typeof exports == 'undefined' then @ else exports)
+
+)(exports ? @,
+  $ ? require('_helpers').$,
+  distance ? require('distance').distance,
+  log ? require('_helpers').log)

@@ -1,14 +1,13 @@
 (function() {
-  $(function() {
-    window.dev = true;
-    window.log = function(args) {
+  (function(exports) {
+    var dev, log;
+    dev = true;
+    log = function(args) {
       if (dev) {
         return console.log.apply(console, arguments);
       }
     };
-    if (dev) {
-      return $('body').append($('<script src="//localhost:35729/livereload.js"></script>'));
-    }
-  });
+    return exports.log = log;
+  })(typeof exports !== "undefined" && exports !== null ? exports : this);
 
 }).call(this);
