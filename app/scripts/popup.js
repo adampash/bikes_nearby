@@ -20,7 +20,7 @@
     return directionsService.route(request, function(result, status) {
       var duration;
       duration = result.routes[0].legs[0].duration.text;
-      $station.append('<div class="eta">' + duration + '</div>');
+      $station.find('.eta').text(duration);
       nearestStations[index].directions = result;
       if (callback != null) {
         return callback();
@@ -126,7 +126,7 @@
   port.postMessage("Fetch data");
 
   port.onMessage.addListener(function(data) {
-    var $station, currentLocation, firstCallback, index, request, startPoint, station, _i, _len,
+    var $station, currentLocation, firstCallback, html, index, request, startPoint, station, _i, _len,
       _this = this;
     nearestStations = data.nearestStations;
     currentLocation = data.currentLocation;
@@ -137,10 +137,11 @@
       $('.stations').html('');
       for (index = _i = 0, _len = nearestStations.length; _i < _len; index = ++_i) {
         station = nearestStations[index];
-        $('.stations').append('<div class="station station' + index + '"></div>');
+        html = "<div class=\"station station" + index + "\">\n  <div class=\"numbikes\"></div>\n  <div class=\"name\"></div>\n  <div class=\"eta\"></div>\n</div>";
+        $('.stations').append(html);
         $station = $('.station' + index);
-        $station.append('<div class="numbikes">' + station.availableBikes + '</div>');
-        $station.append('<div class="name">' + station.stationName + '</div>');
+        $station.find('.numbikes').text(station.availableDocks);
+        $station.find('.name').text(station.stationName);
         if (index === 0) {
           $station.addClass('active');
         }

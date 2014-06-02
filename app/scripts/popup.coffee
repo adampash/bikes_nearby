@@ -11,7 +11,7 @@ getEta = (request, $station, index, callback) ->
   directionsService = new google.maps.DirectionsService()
   directionsService.route request, (result, status) ->
     duration = result.routes[0].legs[0].duration.text
-    $station.append('<div class="eta">' + duration + '</div>')
+    $station.find('.eta').text(duration)
     nearestStations[index].directions = result
     callback() if callback?
 
@@ -107,11 +107,17 @@ port.onMessage.addListener (data) ->
   if nearestStations.length > 0
     $('.stations').html('')
     for station, index in nearestStations
-      $('.stations').append('<div class="station station' + index + '"></div>')
+      html = """
+        <div class="station station#{index}">
+          <div class="numbikes"></div>
+          <div class="name"></div>
+          <div class="eta"></div>
+        </div>
+      """
+      $('.stations').append(html)
       $station = $('.station' + index)
-      # $station.text(station.stationName + ': ' + station.availableBikes)
-      $station.append('<div class="numbikes">' + station.availableBikes + '</div>')
-      $station.append('<div class="name">' + station.stationName + '</div>')
+      $station.find('.numbikes').text(station.availableDocks)
+      $station.find('.name').text(station.stationName)
       $station.addClass('active') if index is 0
 
       request =
