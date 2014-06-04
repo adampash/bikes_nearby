@@ -14,6 +14,8 @@
 <!-- build:js scripts/popup.js -->
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDmHze94i5d9cQ3MUyp0mIarKvVRYa_57k&sensor=false"></script>
 <script src="scripts/jquery.js"></script>
+<script src="scripts/_helpers.js"></script>
+<script src="scripts/infobox.js"></script>
 <script src="scripts/mousetrap.min.js"></script>
 <script src="scripts/popup.js"></script>
 <!-- endbuild -->
@@ -21,9 +23,11 @@
 <body>
 <div id="mapcanvas"></div>
 <div class="station header">
-  <div class="numbikes">&nbsp;</div>
+  <div class="numbikes">
+    <div class="bike_icon"></div>
+  </div>
   <div class="name">Location &amp; Walking Time</div>
-  <div class="refresh">Refresh</div>
+  <!-- <div class="refresh">Refresh</div> -->
 </div>
 <div class="stations">
 </div>

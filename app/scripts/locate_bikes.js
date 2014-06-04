@@ -67,7 +67,7 @@
               }
             }
             if (_this.callback != null) {
-              return _this.callback(closestStations, coords);
+              return _this.callback(bikeStations, coords);
             }
           }
         });

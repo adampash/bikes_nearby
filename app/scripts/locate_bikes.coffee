@@ -89,7 +89,8 @@
               closestStations.push station
 
           # if you're over 30 miles (48280.3m) from the closest station return false
-          @callback closestStations, coords if @callback?
+          @callback bikeStations, coords if @callback?
+          # @callback closestStations, coords if @callback?
 
     fetchBikesNear: (position, callback) ->
       @callback = callback if callback?

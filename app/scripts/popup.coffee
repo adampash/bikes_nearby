@@ -7,6 +7,100 @@ stationLatLng = null
 infowindow = null
 path = null
 
+mapStyle = [
+  {
+    featureType: "poi.school"
+    elementType: "geometry.fill"
+    stylers: [color: "#D6D6D6"]
+  }
+  {
+    featureType: "poi.park"
+    stylers: [color: "#B5B4B3"]
+  }
+  {
+    featureType: "poi.attraction"
+    elementType: "labels.text.fill"
+    stylers: [color: "#969696"]
+  }
+  {
+    featureType: "poi"
+    elementType: "labels.text.fill"
+    stylers: [color: "#969696"]
+  }
+  {
+    featureType: "road"
+    elementType: "geometry"
+    stylers: [color: "#FAFAFA"]
+  }
+  {
+    featureType: "poi.sports_complex"
+    elementType: "geometry.fill"
+    stylers: [color: "#B5B4B3"]
+  }
+  {
+    elementType: "labels.text.stroke"
+    stylers: [
+      {
+        color: "#000000"
+      }
+      {
+        visibility: "off"
+      }
+    ]
+  }
+  {
+    featureType: "landscape.man_made"
+    stylers: [color: "#D6D6D6"]
+  }
+  {
+    featureType: "poi.medical"
+    elementType: "geometry.fill"
+    stylers: [color: "#D6D6D6"]
+  }
+  {
+    featureType: "poi.government"
+    stylers: [color: "#D6D6D6"]
+  }
+  {
+    featureType: "administrative"
+    elementType: "geometry.fill"
+    stylers: [color: "#D6D6D6"]
+  }
+  {
+    featureType: "poi.place_of_worship"
+    elementType: "geometry.fill"
+    stylers: [color: "#D6D6D6"]
+  }
+  {
+    featureType: "landscape.natural"
+    elementType: "geometry.fill"
+    stylers: [color: "#D6D6D6"]
+  }
+  {
+    featureType: "poi.attraction"
+    elementType: "geometry.fill"
+    stylers: [color: "#D6D6D6"]
+  }
+  {
+    featureType: "water"
+    elementType: "geometry.fill"
+    stylers: [color: "#9C89AD"]
+  }
+  {
+    featureType: "transit.line"
+    stylers: [visibility: "off"]
+  }
+  {
+    elementType: "labels.text.fill"
+    stylers: [color: "#5f5f5f"]
+  }
+  {
+    featureType: "transit.station.airport"
+    elementType: "geometry.fill"
+    stylers: [color: "#B5B4B3"]
+  }
+]
+
 getEta = (request, $station, index, callback) ->
   directionsService = new google.maps.DirectionsService()
   directionsService.route request, (result, status) ->
@@ -22,16 +116,18 @@ embedMap = (currentLocation) ->
     zoom: 15
     center: youLatLng
     mapTypeId: google.maps.MapTypeId.ROADMAP
+    streetViewControl: false
+    mapTypeControl: false
     # disableDefaultUI: true
 
   map = new google.maps.Map(document.getElementById("mapcanvas"),
     mapOptions)
-
+  map.setOptions({styles: mapStyle})
   new google.maps.Marker
     position: youLatLng
     map: map
     title:"You"
-    icon: "images/you.png"
+    icon: "images/you_icon.png"
 
 dropMarker = (station) ->
   stationLatLng = new google.maps.LatLng(station.latitude, station.longitude)
@@ -39,10 +135,11 @@ dropMarker = (station) ->
     position: stationLatLng
     map: map
     title: station.stationName
-    icon: "images/you.png"
+    icon: "images/bike_station.png"
 
 drawPath = (index) ->
   directions = nearestStations[index].directions
+  return unless directions?.routes?
   lineSymbol =
     path: 'M 0,-1 0,1'
     strokeOpacity: 1
@@ -50,19 +147,50 @@ drawPath = (index) ->
   path = new google.maps.Polyline
     path: directions.routes[0].overview_path
     # geodesic: true
-    strokeOpacity: 0
-    icons: [
-      icon: lineSymbol
-      offset: '0'
-      repeat: '15px'
-    ]
-    strokeColor: '#0000FF'
-    # strokeWeight: 2
+    strokeOpacity: 0.5
+    # icons: [
+    #   icon: lineSymbol
+    #   offset: '0'
+    #   repeat: '15px'
+    # ]
+    strokeColor: '#8100ec'
+    strokeWeight: 5
   path.setMap(map)
 
 showInfoWindow = (station) ->
+  # boxOptions =
+  #   content: "#{station.availableBikes}  bikes #{station.availableDocks} docks"
+     # fontSize: "14px"
+      # color: 'white'
+      # width: '150px'
+    # pixelOffset: new google.maps.Size(-60, -40)
+    # position: new google.maps.LatLng(station.latitude, station.longitude)
+
+
+#   `
+#     var myOptions = {
+#      content: "HI THERE"
+#   ,boxStyle: {
+#      border: "1px solid black"
+#     ,textAlign: "center"
+#     ,fontSize: "8pt"
+#     ,width: "50px"
+#    }
+#   ,disableAutoPan: true
+#   ,pixelOffset: new google.maps.Size(-25, 0)
+#   ,position: new google.maps.LatLng(station.latitude, station.longitude)
+#   ,closeBoxURL: ""
+#   ,isHidden: false
+#   ,pane: "mapPane"
+#   ,enableEventPropagation: true
+#   };
+# `
+
+
+  # infobox = new InfoBox boxOptions
+  # infobox.open(map,marker)
   infowindow = new google.maps.InfoWindow
-    content: station.availableBikes + ' bikes; ' + station.availableDocks + ' docks'
+    content: station.availableBikes + ' bikes ' + station.availableDocks + ' docks'
   infowindow.open(map,marker)
 
 zoomToFit = ->
@@ -70,6 +198,7 @@ zoomToFit = ->
   bounds.extend(youLatLng)
   bounds.extend(stationLatLng)
   map.fitBounds(bounds)
+  map.setZoom(map.getZoom() - 1)
 
 activateStation = (station, index) ->
   console.log 'activate station ' + index
@@ -80,12 +209,20 @@ activateStation = (station, index) ->
   $('.station').removeClass('active')
   $('.station' + index).addClass('active')
 
+animateTo = ($station) ->
+  # debugger
+  # $('.stations').animate
+  #   scrollTop: $station.offset().top - $('.stations').offset().top
+  # , 250
+  $('.stations').scrollTo $station
+
 Mousetrap.bind ['down', 'j'], ->
   $('.station.active')
     .removeClass('active')
     .next().addClass('active').click()
   if $('.station.active').length is 0
     $('.station').last().addClass('active')
+  animateTo $('.station.active')
 
 Mousetrap.bind ['up', 'k'], ->
   $('.station.active')
@@ -93,6 +230,7 @@ Mousetrap.bind ['up', 'k'], ->
     .prev().addClass('active').click()
   if $('.station.active').length is 0
     $('.stations .station').first().addClass('active')
+  animateTo $('.station.active')
 
 
 nearestStations = []
@@ -116,10 +254,12 @@ port.onMessage.addListener (data) ->
       """
       $('.stations').append(html)
       $station = $('.station' + index)
-      $station.find('.numbikes').text(station.availableDocks)
+      $station.find('.numbikes').text(station.availableBikes)
       $station.find('.name').text(station.stationName)
       $station.addClass('active') if index is 0
 
+    for station, index in nearestStations[0..4]
+      $station = $('.station' + index)
       request =
         origin: startPoint
         destination: station.latitude + ',' + station.longitude
