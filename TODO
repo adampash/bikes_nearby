@@ -1,3 +1,4 @@
 Icon should be grayed out if not within city threshhold (and message displayed on popup click)
 Numbers should not be half-opacity
 Scroll-by-keyboard
+setinterval to refresh data every minute extension is open

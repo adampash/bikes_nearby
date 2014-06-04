@@ -210,11 +210,12 @@ activateStation = (station, index) ->
   $('.station' + index).addClass('active')
 
 animateTo = ($station) ->
-  # debugger
-  # $('.stations').animate
-  #   scrollTop: $station.offset().top - $('.stations').offset().top
-  # , 250
-  $('.stations').scrollTo $station
+  scrollTo = $station.offset().top - $('.stations').offset().top + $('.stations').scrollTop() - 60
+
+  # $('.stations').scrollTop(scrollTo)
+  $('.stations').animate
+    scrollTop: scrollTo
+  , 70
 
 Mousetrap.bind ['down', 'j'], ->
   $('.station.active')
@@ -223,6 +224,7 @@ Mousetrap.bind ['down', 'j'], ->
   if $('.station.active').length is 0
     $('.station').last().addClass('active')
   animateTo $('.station.active')
+  false
 
 Mousetrap.bind ['up', 'k'], ->
   $('.station.active')
@@ -231,6 +233,7 @@ Mousetrap.bind ['up', 'k'], ->
   if $('.station.active').length is 0
     $('.stations .station').first().addClass('active')
   animateTo $('.station.active')
+  false
 
 
 nearestStations = []

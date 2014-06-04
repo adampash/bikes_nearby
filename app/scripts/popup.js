@@ -251,7 +251,11 @@
   };
 
   animateTo = function($station) {
-    return $('.stations').scrollTo($station);
+    var scrollTo;
+    scrollTo = $station.offset().top - $('.stations').offset().top + $('.stations').scrollTop() - 60;
+    return $('.stations').animate({
+      scrollTop: scrollTo
+    }, 70);
   };
 
   Mousetrap.bind(['down', 'j'], function() {
@@ -259,7 +263,8 @@
     if ($('.station.active').length === 0) {
       $('.station').last().addClass('active');
     }
-    return animateTo($('.station.active'));
+    animateTo($('.station.active'));
+    return false;
   });
 
   Mousetrap.bind(['up', 'k'], function() {
@@ -267,7 +272,8 @@
     if ($('.station.active').length === 0) {
       $('.stations .station').first().addClass('active');
     }
-    return animateTo($('.station.active'));
+    animateTo($('.station.active'));
+    return false;
   });
 
   nearestStations = [];
