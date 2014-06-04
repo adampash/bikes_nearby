@@ -190,7 +190,7 @@
       position: youLatLng,
       map: map,
       title: "You",
-      icon: "images/you_icon.png"
+      icon: "images/you.png"
     });
   };
 
@@ -201,7 +201,7 @@
       position: stationLatLng,
       map: map,
       title: station.stationName,
-      icon: "images/bike_station.png"
+      icon: "images/station.png"
     });
     new_marker.info = constructInfoWindow(station);
     google.maps.event.addListener(new_marker, 'click', function() {
@@ -235,7 +235,7 @@
       show = true;
     }
     return infowindow = new google.maps.InfoWindow({
-      content: station.availableBikes + ' bikes ' + station.availableDocks + ' docks'
+      content: "<b>" + station.availableBikes + " bikes " + station.availableDocks + " docks</b>"
     });
   };
 
@@ -378,8 +378,11 @@
     return $('.toggle_all').click(function() {
       if ($(this).hasClass('all')) {
         showAll(false);
+        $(this).text("Show all");
+        activateStation(nearestStations[0], 0);
       } else {
         showAll(true);
+        $(this).text("Show closest");
       }
       return $(this).toggleClass('all');
     });

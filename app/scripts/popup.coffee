@@ -127,7 +127,7 @@ embedMap = (currentLocation) ->
     position: youLatLng
     map: map
     title:"You"
-    icon: "images/you_icon.png"
+    icon: "images/you.png"
 
 dropMarker = (station) ->
   stationLatLng = new google.maps.LatLng(station.latitude, station.longitude)
@@ -135,7 +135,7 @@ dropMarker = (station) ->
     position: stationLatLng
     map: map
     title: station.stationName
-    icon: "images/bike_station.png"
+    icon: "images/station.png"
   new_marker.info = constructInfoWindow(station)
   google.maps.event.addListener new_marker, 'click', ->
     new_marker.info.open(map, new_marker)
@@ -164,7 +164,7 @@ drawPath = (index) ->
 
 constructInfoWindow = (station, show=true) ->
   infowindow = new google.maps.InfoWindow
-    content: station.availableBikes + ' bikes ' + station.availableDocks + ' docks'
+    content: "<b>#{station.availableBikes} bikes #{station.availableDocks} docks</b>"
   # boxOptions =
   #   content: "#{station.availableBikes}  bikes #{station.availableDocks} docks"
      # fontSize: "14px"
@@ -309,6 +309,12 @@ port.onMessage.addListener (data) ->
 
 $ ->
   $('.toggle_all').click ->
-    if $(@).hasClass('all') then showAll(false) else showAll(true)
+    if $(@).hasClass('all') 
+      showAll(false) 
+      $(@).text("Show all")
+      activateStation(nearestStations[0], 0)
+    else
+      showAll(true)
+      $(@).text("Show closest")
     $(@).toggleClass('all')
 

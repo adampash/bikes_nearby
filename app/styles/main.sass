@@ -9,9 +9,10 @@ $black: rgb(0, 0, 0)
 
 
 
-$font: "HelveticaNeue-Medium", "Helvetica Neue Medium", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif
+$font: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif
+$font_medium: "HelveticaNeue-Medium", "Helvetica Neue Medium", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif
 $font_light: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif
-$rowheight: 60px
+$rowheight: 50px
 
 $header_bg: $black
 $highlight_bg: $purple
@@ -34,38 +35,43 @@ body
   height: 270px
   overflow-y: auto
 .station
+  opacity: 0.5
   height: $rowheight
   line-height: $rowheight
   cursor: pointer
   &+.station
     border-top: 1px solid $lightgray
   &.active
-    background: $highlight_bg
+    opacity: 1
+    // background: $highlight_bg
     div
-      &.name, &.numbikes, &.eta
-        color: white
+      &.name
+        color: $black
+      &.numbikes, &.eta
+        color: $purple
   div
     float: left
     color: $black
     &.numbikes
       color: $bikes_avail_color
-      font-size: 40px
+      font-size: 32px
       width: 75px
       margin-right: 10px
       text-align: center
       font-family: $font_light
     &.name
       // font-weight: bold
-      font-size: 16px
+      font-size: 14px
       margin-right: 10px
     &.eta
       font-size: 14px
-      font-family: $font_light
+      font-family: $font
     &.toggle_all
       color: white
       float: right
       cursor: pointer
       font-size: 12px
+      margin-right: 15px
   &.header
     // font-family: $font_light
     background: $header_bg
@@ -80,7 +86,7 @@ body
         width: 42px
         height: 42px
         margin-left: 17px
-        margin-top: 9px
+        margin-top: 5px
       // background: $lightgray
       // background: white
     .name
