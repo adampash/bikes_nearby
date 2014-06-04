@@ -131,11 +131,16 @@ embedMap = (currentLocation) ->
 
 dropMarker = (station) ->
   stationLatLng = new google.maps.LatLng(station.latitude, station.longitude)
-  marker = new google.maps.Marker
+  new_marker = new google.maps.Marker
     position: stationLatLng
     map: map
     title: station.stationName
     icon: "images/bike_station.png"
+  new_marker.info = constructInfoWindow(station)
+  google.maps.event.addListener new_marker, 'click', ->
+    new_marker.info.open(map, new_marker)
+    # TODO select related station in stations div and scroll to it
+  new_marker
 
 drawPath = (index) ->
   directions = nearestStations[index].directions
@@ -157,7 +162,9 @@ drawPath = (index) ->
     strokeWeight: 5
   path.setMap(map)
 
-showInfoWindow = (station, show=true) ->
+constructInfoWindow = (station, show=true) ->
+  infowindow = new google.maps.InfoWindow
+    content: station.availableBikes + ' bikes ' + station.availableDocks + ' docks'
   # boxOptions =
   #   content: "#{station.availableBikes}  bikes #{station.availableDocks} docks"
      # fontSize: "14px"
@@ -189,9 +196,6 @@ showInfoWindow = (station, show=true) ->
 
   # infobox = new InfoBox boxOptions
   # infobox.open(map,marker)
-  infowindow = new google.maps.InfoWindow
-    content: station.availableBikes + ' bikes ' + station.availableDocks + ' docks'
-  infowindow.open(map,marker)
 
 zoomToFit = ->
   bounds = new google.maps.LatLngBounds()
@@ -202,8 +206,8 @@ zoomToFit = ->
 
 activateStation = (station, index) ->
   console.log 'activate station ' + index
-  dropMarker(station)
-  showInfoWindow(station)
+  marker = dropMarker(station)
+  google.maps.event.trigger(marker, 'click')
   zoomToFit()
   drawPath(index)
   $('.station').removeClass('active')
@@ -221,6 +225,7 @@ showAll = (bool) ->
     for mark in allMarkers
       mark.setMap(null)
     allMarkers = []
+    # TODO activate selected station
 
 animateTo = ($station) ->
   scrollTo = $station.offset().top - $('.stations').offset().top + $('.stations').scrollTop() - 60
@@ -228,18 +233,19 @@ animateTo = ($station) ->
   # $('.stations').scrollTop(scrollTo)
   $('.stations').animate
     scrollTop: scrollTo
-  , 70
+  , 150
 
 Mousetrap.bind ['down', 'j'], ->
+  animateTo $('.station.active').next()
   $('.station.active')
     .removeClass('active')
     .next().addClass('active').click()
   if $('.station.active').length is 0
     $('.station').last().addClass('active')
-  animateTo $('.station.active')
   false
 
 Mousetrap.bind ['up', 'k'], ->
+  animateTo $('.station.active').prev()
   $('.station.active')
     .removeClass('active')
     .prev().addClass('active').click()

@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  var activateStation, allMarkers, animateTo, drawPath, dropMarker, embedMap, getEta, infowindow, map, mapStyle, marker, nearestStations, path, port, showAll, showInfoWindow, stationLatLng, youLatLng, zoomToFit;
+  var activateStation, allMarkers, animateTo, constructInfoWindow, drawPath, dropMarker, embedMap, getEta, infowindow, map, mapStyle, marker, nearestStations, path, port, showAll, stationLatLng, youLatLng, zoomToFit;
 
   map = null;
 
@@ -195,13 +195,19 @@
   };
 
   dropMarker = function(station) {
+    var new_marker;
     stationLatLng = new google.maps.LatLng(station.latitude, station.longitude);
-    return marker = new google.maps.Marker({
+    new_marker = new google.maps.Marker({
       position: stationLatLng,
       map: map,
       title: station.stationName,
       icon: "images/bike_station.png"
     });
+    new_marker.info = constructInfoWindow(station);
+    google.maps.event.addListener(new_marker, 'click', function() {
+      return new_marker.info.open(map, new_marker);
+    });
+    return new_marker;
   };
 
   drawPath = function(index) {
@@ -224,14 +230,13 @@
     return path.setMap(map);
   };
 
-  showInfoWindow = function(station, show) {
+  constructInfoWindow = function(station, show) {
     if (show == null) {
       show = true;
     }
-    infowindow = new google.maps.InfoWindow({
+    return infowindow = new google.maps.InfoWindow({
       content: station.availableBikes + ' bikes ' + station.availableDocks + ' docks'
     });
-    return infowindow.open(map, marker);
   };
 
   zoomToFit = function() {
@@ -245,8 +250,8 @@
 
   activateStation = function(station, index) {
     console.log('activate station ' + index);
-    dropMarker(station);
-    showInfoWindow(station);
+    marker = dropMarker(station);
+    google.maps.event.trigger(marker, 'click');
     zoomToFit();
     drawPath(index);
     $('.station').removeClass('active');
@@ -283,19 +288,20 @@
     scrollTo = $station.offset().top - $('.stations').offset().top + $('.stations').scrollTop() - 60;
     return $('.stations').animate({
       scrollTop: scrollTo
-    }, 70);
+    }, 150);
   };
 
   Mousetrap.bind(['down', 'j'], function() {
+    animateTo($('.station.active').next());
     $('.station.active').removeClass('active').next().addClass('active').click();
     if ($('.station.active').length === 0) {
       $('.station').last().addClass('active');
     }
-    animateTo($('.station.active'));
     return false;
   });
 
   Mousetrap.bind(['up', 'k'], function() {
+    animateTo($('.station.active').prev());
     $('.station.active').removeClass('active').prev().addClass('active').click();
     if ($('.station.active').length === 0) {
       $('.stations .station').first().addClass('active');
