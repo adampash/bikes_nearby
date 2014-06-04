@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  var activateStation, animateTo, drawPath, dropMarker, embedMap, getEta, infowindow, map, mapStyle, marker, nearestStations, path, port, showInfoWindow, stationLatLng, youLatLng, zoomToFit;
+  var activateStation, allMarkers, animateTo, drawPath, dropMarker, embedMap, getEta, infowindow, map, mapStyle, marker, nearestStations, path, port, showAll, showInfoWindow, stationLatLng, youLatLng, zoomToFit;
 
   map = null;
 
@@ -224,7 +224,10 @@
     return path.setMap(map);
   };
 
-  showInfoWindow = function(station) {
+  showInfoWindow = function(station, show) {
+    if (show == null) {
+      show = true;
+    }
     infowindow = new google.maps.InfoWindow({
       content: station.availableBikes + ' bikes ' + station.availableDocks + ' docks'
     });
@@ -248,6 +251,31 @@
     drawPath(index);
     $('.station').removeClass('active');
     return $('.station' + index).addClass('active');
+  };
+
+  allMarkers = [];
+
+  showAll = function(bool) {
+    var mark, station, _i, _j, _len, _len1;
+    if (bool) {
+      map.setZoom(map.getZoom() - 2);
+      for (_i = 0, _len = nearestStations.length; _i < _len; _i++) {
+        station = nearestStations[_i];
+        allMarkers.push(dropMarker(station));
+      }
+      if (marker != null) {
+        marker.setMap(null);
+      }
+      if (path != null) {
+        return path.setMap(null);
+      }
+    } else {
+      for (_j = 0, _len1 = allMarkers.length; _j < _len1; _j++) {
+        mark = allMarkers[_j];
+        mark.setMap(null);
+      }
+      return allMarkers = [];
+    }
   };
 
   animateTo = function($station) {
@@ -337,6 +365,17 @@
       path = null;
       index = $(this).index();
       return activateStation(nearestStations[index], index);
+    });
+  });
+
+  $(function() {
+    return $('.toggle_all').click(function() {
+      if ($(this).hasClass('all')) {
+        showAll(false);
+      } else {
+        showAll(true);
+      }
+      return $(this).toggleClass('all');
     });
   });
 

@@ -63,11 +63,11 @@ body {
   font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000364}}
-.station div.refresh {
-  color: #0000fa;
+.station div.toggle_all {
+  color: white;
   float: right;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 12px;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000369}}
 .station.header {

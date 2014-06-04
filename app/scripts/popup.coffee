@@ -157,7 +157,7 @@ drawPath = (index) ->
     strokeWeight: 5
   path.setMap(map)
 
-showInfoWindow = (station) ->
+showInfoWindow = (station, show=true) ->
   # boxOptions =
   #   content: "#{station.availableBikes}  bikes #{station.availableDocks} docks"
      # fontSize: "14px"
@@ -208,6 +208,19 @@ activateStation = (station, index) ->
   drawPath(index)
   $('.station').removeClass('active')
   $('.station' + index).addClass('active')
+
+allMarkers = []
+showAll = (bool) ->
+  if bool
+    map.setZoom(map.getZoom() - 2)
+    for station in nearestStations
+      allMarkers.push dropMarker(station)
+    marker.setMap(null) if marker?
+    path.setMap(null) if path?
+  else
+    for mark in allMarkers
+      mark.setMap(null)
+    allMarkers = []
 
 animateTo = ($station) ->
   scrollTo = $station.offset().top - $('.stations').offset().top + $('.stations').scrollTop() - 60
@@ -287,3 +300,9 @@ port.onMessage.addListener (data) ->
     path = null
     index = $(this).index()
     activateStation(nearestStations[index], index)
+
+$ ->
+  $('.toggle_all').click ->
+    if $(@).hasClass('all') then showAll(false) else showAll(true)
+    $(@).toggleClass('all')
+
