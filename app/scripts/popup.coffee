@@ -292,7 +292,7 @@ port.onMessage.addListener (data) ->
           # activateStation(nearestStations[0], 0)
           setTimeout =>
             $('.stations .station').first().click()
-          , 300
+          , 500
       getEta(request, $station, index, firstCallback)
 
   else

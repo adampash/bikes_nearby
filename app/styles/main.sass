@@ -18,8 +18,12 @@ $header_bg: $black
 $highlight_bg: $purple
 $bikes_avail_color: $purple
 
+$map_height: 250px
+$stations_height: 270px
+
 body
   width: 450px
+  height: $map_height + $stations_height + $rowheight
   font-family: $font
   font-weight: 300
   padding: 0
@@ -27,12 +31,12 @@ body
   border-radius: none
 
 #mapcanvas
-  height: 250px
+  height: $map_height
   background: $lightgray
   // border-top: 10px solid $header_bg
 
 .stations
-  height: 270px
+  height: $stations_height
   overflow-y: auto
 .station
   opacity: 0.5

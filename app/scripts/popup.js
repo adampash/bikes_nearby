@@ -352,7 +352,7 @@
           firstCallback = function() {
             return setTimeout(function() {
               return $('.stations .station').first().click();
-            }, 300);
+            }, 500);
           };
         }
         getEta(request, $station, index, firstCallback);
