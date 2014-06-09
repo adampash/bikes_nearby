@@ -1,6 +1,6 @@
 {
   "appName": {
-    "message": "Displays bike share info closest to you. Currently supports NYC CitiBikes, Chicago Divvy bikes, and SF's Bay Area BikeShare.",
+    "message": "Bikeable",
     "description": "Bikeable"
   },
   "appDescription": {
