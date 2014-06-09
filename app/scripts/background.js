@@ -15,8 +15,8 @@
   setNearest = function(station) {
     var canvas, ctx, img;
     canvas = document.createElement('canvas');
-    canvas.width = 20;
-    canvas.height = 20;
+    canvas.width = 19;
+    canvas.height = 19;
     ctx = canvas.getContext('2d');
     img = new Image();
     img.src = "images/bikes_icon_19.png";
@@ -26,15 +26,10 @@
       ctx.font = "7pt HelveticaNeue";
       ctx.fontStyle = 'bold';
       ctx.fillStyle = 'white';
+      ctx.textAlign = 'center';
       numBikes = station.availableBikes + '';
-      if (numBikes.length === 1) {
-        ctx.fillText(parseInt(numBikes), 7, 10);
-      } else if (numBikes[0] === "1") {
-        ctx.fillText(parseInt(numBikes), 4, 10);
-      } else {
-        ctx.fillText(parseInt(numBikes), 5, 10);
-      }
-      imageData = ctx.getImageData(0, 0, 19, 19);
+      ctx.fillText(parseInt(numBikes), canvas.width / 2, 10);
+      imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       return chrome.browserAction.setIcon({
         imageData: imageData
       });

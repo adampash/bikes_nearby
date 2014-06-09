@@ -91,7 +91,7 @@ drawPath = (index) ->
 
 constructInfoWindow = (station, show=true) ->
   infowindow = new google.maps.InfoWindow
-    content: "<b>#{station.availableBikes} bikes #{station.availableDocks} docks</b>"
+    content: "<b class=\"myFont\">#{station.availableBikes} bikes #{station.availableDocks} docks</b>"
 
 zoomToFit = ->
   bounds = new google.maps.LatLngBounds()

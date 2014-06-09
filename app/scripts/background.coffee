@@ -10,8 +10,8 @@ setNearest = (station) ->
   # chrome.browserAction.setBadgeBackgroundColor color: [0, 0, 0, 255]
   # chrome.browserAction.setBadgeText({text: "" + station.availableBikes})
   canvas = document.createElement 'canvas'
-  canvas.width = 20
-  canvas.height = 20
+  canvas.width = 19
+  canvas.height = 19
   ctx = canvas.getContext '2d'
 
   img = new Image()
@@ -21,16 +21,12 @@ setNearest = (station) ->
     ctx.font = "7pt HelveticaNeue"
     ctx.fontStyle = 'bold'
     ctx.fillStyle = 'white'
+    ctx.textAlign = 'center'
     numBikes = station.availableBikes + ''
-    if numBikes.length is 1
-      ctx.fillText parseInt(numBikes), 7, 10
-    else if numBikes[0] is "1"
-      ctx.fillText parseInt(numBikes), 4, 10
-    else
-      ctx.fillText parseInt(numBikes), 5, 10
+    ctx.fillText parseInt(numBikes), canvas.width/2, 10
 
+    imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
 
-    imageData = ctx.getImageData(0, 0, 19, 19)
     chrome.browserAction.setIcon
       imageData: imageData
 

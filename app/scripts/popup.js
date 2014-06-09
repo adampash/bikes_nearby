@@ -129,7 +129,7 @@
       show = true;
     }
     return infowindow = new google.maps.InfoWindow({
-      content: "<b>" + station.availableBikes + " bikes " + station.availableDocks + " docks</b>"
+      content: "<b class=\"myFont\">" + station.availableBikes + " bikes " + station.availableDocks + " docks</b>"
     });
   };
 
