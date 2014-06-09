@@ -15,9 +15,11 @@ getEta = (request, $station, index, callback) ->
     nearestStations[index].directions = result
     callback() if index is 0
 
+places_marker = null
 setupSearch = ->
   input = $('input')[0]
-  places.search map, input, =>
+  places.search map, input, (pl_marker) =>
+    places_marker = marker
     if $('.toggle_all').text().indexOf('all') > -1
       $('.toggle_all').click()
 
@@ -67,6 +69,9 @@ dropMarker = (station, active=false) ->
     scrollTo(station)
 
     prev_marker = new_marker
+    setTimeout ->
+      map.panBy(0,-40)
+    , 10
   new_marker
 
 drawPath = (index) ->
@@ -128,10 +133,13 @@ showAll = (bool) ->
     for mark in allMarkers
       mark.setMap(null)
     allMarkers = []
+    if places_marker?
+      debugger
+      places_marker.setVisible(false)
+      places_marker.setMap(null)
   path.setMap(null) if path?
   marker.setMap(null) if marker?
   allOn = bool
-    # TODO activate selected station
 
 animateTo = ($station) ->
   position = $station.offset().top - $('.stations').offset().top + $('.stations').scrollTop() - 60
@@ -221,6 +229,9 @@ $ ->
   setTimeout ->
     $('input').blur()
   , 180
+
+  # $('input').on 'focus', ->
+  #   $('input').select()
 
   $('.toggle_all').click ->
     if $(@).hasClass('all')

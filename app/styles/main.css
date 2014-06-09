@@ -1,7 +1,7 @@
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000325}}
 body {
   width: 450px;
-  height: 550px;
+  height: 575px;
   font-family: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-weight: 300;
   padding: 0;
@@ -11,7 +11,7 @@ body {
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000334}}
 #mapcanvas {
-  height: 250px;
+  height: 275px;
   background: #b4b4b4;
 }
 
@@ -99,16 +99,29 @@ body {
 }
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\00003100}}
-input {
+.searchbar {
+  position: fixed;
+  top: 11px;
+  left: 30px;
+  border: 1px solid #aaaaaa;
+  border-radius: 3px;
+  width: 275px;
+  background: white;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\00003108}}
+.searchbar input {
+  width: 260px;
+  margin-left: 2px;
   outline: none;
+  border: none;
+  font-weight: bold;
   height: 24px;
   font-size: 12px;
   font: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-  margin-left: 12px;
-  width: 310px;
+  padding-left: 8px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\00003108}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\00003121}}
 .infoBox {
   background: blue;
 }

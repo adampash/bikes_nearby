@@ -44,7 +44,7 @@
         infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address)
         # infowindow.open(map, marker)
 
-        callback() if callback?
+        callback(marker) if callback?
 
 
   exports.places = places

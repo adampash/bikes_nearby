@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  var activateStation, allMarkers, allOn, animateTo, constructInfoWindow, drawPath, dropMarker, embedMap, getEta, infowindow, map, mapStyle, marker, nearestStations, path, port, prev_marker, scrollTo, setupSearch, showAll, stationLatLng, youLatLng, zoomToFit;
+  var activateStation, allMarkers, allOn, animateTo, constructInfoWindow, drawPath, dropMarker, embedMap, getEta, infowindow, map, mapStyle, marker, nearestStations, path, places_marker, port, prev_marker, scrollTo, setupSearch, showAll, stationLatLng, youLatLng, zoomToFit;
 
   map = null;
 
@@ -28,11 +28,14 @@
     });
   };
 
+  places_marker = null;
+
   setupSearch = function() {
     var input,
       _this = this;
     input = $('input')[0];
-    return places.search(map, input, function() {
+    return places.search(map, input, function(pl_marker) {
+      places_marker = marker;
       if ($('.toggle_all').text().indexOf('all') > -1) {
         return $('.toggle_all').click();
       }
@@ -93,7 +96,10 @@
       }
       new_marker.setIcon("images/station_on.png");
       scrollTo(station);
-      return prev_marker = new_marker;
+      prev_marker = new_marker;
+      return setTimeout(function() {
+        return map.panBy(0, -40);
+      }, 10);
     });
     return new_marker;
   };
@@ -181,6 +187,11 @@
         mark.setMap(null);
       }
       allMarkers = [];
+      if (places_marker != null) {
+        debugger;
+        places_marker.setVisible(false);
+        places_marker.setMap(null);
+      }
     }
     if (path != null) {
       path.setMap(null);

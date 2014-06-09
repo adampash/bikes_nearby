@@ -33,7 +33,7 @@
           }
           infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
           if (callback != null) {
-            return callback();
+            return callback(marker);
           }
         });
       }

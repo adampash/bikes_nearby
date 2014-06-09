@@ -19,7 +19,7 @@ $header_bg: $black
 $highlight_bg: $red
 $bikes_avail_color: $red
 
-$map_height: 250px
+$map_height: 275px
 $stations_height: 250px
 
 body
@@ -97,13 +97,26 @@ body
     .name
       color: white
 
-input
-  outline: none
-  height: $inputheight
-  font-size: 12px
-  font: $font
-  margin-left: 12px
-  width: 310px
+.searchbar
+  position: fixed
+  top: 11px
+  left: 30px
+  border: 1px solid #aaa
+  border-radius: 3px
+  width: 275px
+  background: white
+  input
+    width: 260px
+    margin-left: 2px
+    outline: none
+    border: none
+    // background: black
+    // color: white
+    font-weight: bold
+    height: $inputheight
+    font-size: 12px
+    font: $font
+    padding-left: 8px
 
 .infoBox
   background: blue
