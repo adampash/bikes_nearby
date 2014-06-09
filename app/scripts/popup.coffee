@@ -226,10 +226,6 @@ port.onMessage.addListener (data) ->
     activateStation(nearestStations[index], index)
 
 $ ->
-  setTimeout ->
-    $('input').blur()
-  , 180
-
   $('input').on 'focus', ->
     $('input').select()
   $('input').on 'mouseup', ->

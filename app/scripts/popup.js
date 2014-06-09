@@ -298,9 +298,6 @@
   });
 
   $(function() {
-    setTimeout(function() {
-      return $('input').blur();
-    }, 180);
     $('input').on('focus', function() {
       return $('input').select();
     });
