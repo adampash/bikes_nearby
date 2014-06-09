@@ -13,12 +13,32 @@
   });
 
   setNearest = function(station) {
-    chrome.browserAction.setBadgeBackgroundColor({
-      color: [0, 0, 0, 255]
-    });
-    return chrome.browserAction.setBadgeText({
-      text: "" + station.availableBikes
-    });
+    var canvas, ctx, img;
+    canvas = document.createElement('canvas');
+    canvas.width = 20;
+    canvas.height = 20;
+    ctx = canvas.getContext('2d');
+    img = new Image();
+    img.src = "images/bikes_icon_19.png";
+    return img.onload = function() {
+      var imageData, numBikes;
+      ctx.drawImage(img, 0, 0);
+      ctx.font = "7pt HelveticaNeue";
+      ctx.fontStyle = 'bold';
+      ctx.fillStyle = 'white';
+      numBikes = station.availableBikes + '';
+      if (numBikes.length === 1) {
+        ctx.fillText(parseInt(numBikes), 7, 10);
+      } else if (numBikes[0] === "1") {
+        ctx.fillText(parseInt(numBikes), 4, 10);
+      } else {
+        ctx.fillText(parseInt(numBikes), 5, 10);
+      }
+      imageData = ctx.getImageData(0, 0, 19, 19);
+      return chrome.browserAction.setIcon({
+        imageData: imageData
+      });
+    };
   };
 
   getStations = function(callback) {
@@ -36,8 +56,11 @@
         log('too far away');
         lastUpdated = new Date();
         if (callback != null) {
-          return callback();
+          callback();
         }
+        return chrome.browserAction.setIcon({
+          path: "/images/bikeable_icon_off_19x19.png"
+        });
       }
     });
   };
