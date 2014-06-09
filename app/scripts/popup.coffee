@@ -230,8 +230,10 @@ $ ->
     $('input').blur()
   , 180
 
-  # $('input').on 'focus', ->
-  #   $('input').select()
+  $('input').on 'focus', ->
+    $('input').select()
+  $('input').on 'mouseup', ->
+    false
 
   $('.toggle_all').click ->
     if $(@).hasClass('all')

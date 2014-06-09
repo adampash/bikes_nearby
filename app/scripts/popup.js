@@ -301,6 +301,12 @@
     setTimeout(function() {
       return $('input').blur();
     }, 180);
+    $('input').on('focus', function() {
+      return $('input').select();
+    });
+    $('input').on('mouseup', function() {
+      return false;
+    });
     return $('.toggle_all').click(function() {
       if ($(this).hasClass('all')) {
         showAll(false);
