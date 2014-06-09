@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  var activateStation, allMarkers, animateTo, constructInfoWindow, drawPath, dropMarker, embedMap, getEta, infowindow, map, mapStyle, marker, nearestStations, path, port, scrollTo, showAll, stationLatLng, youLatLng, zoomToFit;
+  var activateStation, allMarkers, allOn, animateTo, constructInfoWindow, drawPath, dropMarker, embedMap, getEta, infowindow, map, mapStyle, marker, nearestStations, path, port, prev_marker, scrollTo, showAll, stationLatLng, youLatLng, zoomToFit;
 
   map = null;
 
@@ -51,14 +51,24 @@
     });
   };
 
-  dropMarker = function(station) {
-    var new_marker;
+  prev_marker = null;
+
+  dropMarker = function(station, active) {
+    var icon, new_marker;
+    if (active == null) {
+      active = false;
+    }
     stationLatLng = new google.maps.LatLng(station.latitude, station.longitude);
+    if (active) {
+      icon = "images/station_on.png";
+    } else {
+      icon = "images/station_off.png";
+    }
     new_marker = new google.maps.Marker({
       position: stationLatLng,
       map: map,
       title: station.stationName,
-      icon: "images/station_off.png",
+      icon: icon,
       id: station.id
     });
     google.maps.event.addListener(new_marker, 'click', function() {
@@ -66,7 +76,13 @@
         infowindow.setMap(null);
       }
       infowindow = constructInfoWindow(station);
-      return infowindow.open(map, new_marker);
+      infowindow.open(map, new_marker);
+      new_marker.setIcon("images/station_on.png");
+      if (prev_marker != null) {
+        prev_marker.setIcon("images/station_off.png");
+      }
+      scrollTo(station);
+      return prev_marker = new_marker;
     });
     return new_marker;
   };
@@ -114,19 +130,28 @@
       trigger = true;
     }
     console.log('activate station ' + index);
-    marker = dropMarker(station);
+    marker = dropMarker(station, true);
     zoomToFit();
     setTimeout(function() {
       return google.maps.event.trigger(marker, 'click');
-    }, 5);
+    }, 30);
     drawPath(index);
     $('.station').removeClass('active');
     return $('.station' + index).addClass('active');
   };
 
-  scrollTo = function(station) {};
+  scrollTo = function(station) {
+    var $station;
+    console.log('scroll to', station);
+    $('.station').removeClass('active');
+    $station = $('#' + station.id);
+    $station.addClass('active');
+    return animateTo($station);
+  };
 
   allMarkers = [];
+
+  allOn = false;
 
   showAll = function(bool) {
     var mark, station, _i, _j, _len, _len1;
@@ -138,26 +163,28 @@
         station = nearestStations[_i];
         allMarkers.push(dropMarker(station));
       }
-      if (marker != null) {
-        marker.setMap(null);
-      }
-      if (path != null) {
-        path.setMap(null);
-      }
-      return $('.stations .station').removeClass('active');
+      $('.stations .station').removeClass('active');
     } else {
       for (_j = 0, _len1 = allMarkers.length; _j < _len1; _j++) {
         mark = allMarkers[_j];
         mark.setMap(null);
       }
-      return allMarkers = [];
+      allMarkers = [];
     }
+    if (path != null) {
+      path.setMap(null);
+    }
+    if (marker != null) {
+      marker.setMap(null);
+    }
+    return allOn = bool;
   };
 
   animateTo = function($station) {
-    scrollTo = $station.offset().top - $('.stations').offset().top + $('.stations').scrollTop() - 60;
+    var position;
+    position = $station.offset().top - $('.stations').offset().top + $('.stations').scrollTop() - 60;
     return $('.stations').animate({
-      scrollTop: scrollTo
+      scrollTop: position
     }, 150);
   };
 

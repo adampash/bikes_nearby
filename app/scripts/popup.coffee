@@ -36,23 +36,31 @@ embedMap = (currentLocation) ->
     icon: "images/you.png"
     zIndex: 1000
 
-dropMarker = (station) ->
+prev_marker = null
+dropMarker = (station, active=false) ->
   stationLatLng = new google.maps.LatLng(station.latitude, station.longitude)
+  if active
+    icon = "images/station_on.png"
+  else
+    icon = "images/station_off.png"
+
   new_marker = new google.maps.Marker
     position: stationLatLng
     map: map
     title: station.stationName
-    icon: "images/station_off.png"
+    icon: icon
     id: station.id
   google.maps.event.addListener new_marker, 'click', ->
     infowindow.setMap(null) if infowindow?
     infowindow = constructInfoWindow(station)
     infowindow.open(map, new_marker)
-    # new_marker.icon = "images/station_off.png"
-    # scrollTo(station)
+    new_marker.setIcon "images/station_on.png"
+    prev_marker.setIcon "images/station_off.png" if prev_marker?
+    scrollTo(station)
     # activateStation(station, 0, false)
     # $(".stations ##{new_marker.id}").click()
     # TODO select related station in stations div and scroll to it
+    prev_marker = new_marker
   new_marker
 
 drawPath = (index) ->
@@ -83,44 +91,47 @@ zoomToFit = ->
 
 activateStation = (station, index, trigger=true) ->
   console.log 'activate station ' + index
-  marker = dropMarker(station)
+  marker = dropMarker(station, true)
   zoomToFit()
   # google.maps.event.trigger(marker, 'click')
   setTimeout ->
     google.maps.event.trigger(marker, 'click')
-  , 5
+  , 30
   drawPath(index)
   $('.station').removeClass('active')
   $('.station' + index).addClass('active')
 
 scrollTo = (station) ->
-  # console.log 'scroll to', station
-  # $('.station').removeClass('active')
-  # $('#' + station.id).addClass('active')
+  console.log 'scroll to', station
+  $('.station').removeClass('active')
+  $station = $('#' + station.id)
+  $station.addClass('active')
+  animateTo $station
 
 
 allMarkers = []
+allOn = false
 showAll = (bool) ->
   if bool
     if map.getZoom() > 16
       map.setZoom(map.getZoom() - 2)
     for station in nearestStations
       allMarkers.push dropMarker(station)
-    marker.setMap(null) if marker?
-    path.setMap(null) if path?
     $('.stations .station').removeClass 'active'
   else
     for mark in allMarkers
       mark.setMap(null)
     allMarkers = []
+  path.setMap(null) if path?
+  marker.setMap(null) if marker?
+  allOn = bool
     # TODO activate selected station
 
 animateTo = ($station) ->
-  scrollTo = $station.offset().top - $('.stations').offset().top + $('.stations').scrollTop() - 60
+  position = $station.offset().top - $('.stations').offset().top + $('.stations').scrollTop() - 60
 
-  # $('.stations').scrollTop(scrollTo)
   $('.stations').animate
-    scrollTop: scrollTo
+    scrollTop: position
   , 150
 
 Mousetrap.bind ['down', 'j'], ->
