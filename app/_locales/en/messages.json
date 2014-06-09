@@ -1,10 +1,10 @@
 {
   "appName": {
-    "message": "Bikes Nearby",
-    "description": "The name of the application"
+    "message": "Displays bike share info closest to you. Currently supports NYC CitiBikes, Chicago Divvy bikes, and SF's Bay Area BikeShare.",
+    "description": "Bikeable"
   },
   "appDescription": {
-    "message": "Displays how many bike shares are nearest to your current location. Currently supports NYC CitiBikes, Chicago Divvy bikes, and San Francisco's Bay Area BikeShare.",
-    "description": "Displays how many bike shares are nearest to your current location. Currently supports NYC CitiBikes, Chicago Divvy bikes, and San Francisco's Bay Area BikeShare."
+    "message": "Displays bike share info closest to you. Currently supports NYC CitiBikes, Chicago Divvy bikes, and SF's Bay Area BikeShare.",
+    "description": "Displays bike share info closest to you. Currently supports NYC CitiBikes, Chicago Divvy bikes, and SF's Bay Area BikeShare."
   }
 }

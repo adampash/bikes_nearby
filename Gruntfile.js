@@ -354,7 +354,7 @@ module.exports = function (grunt) {
         compress: {
             dist: {
                 options: {
-                    archive: 'package/Bikes Nearby<%= config.manifest.version %>.zip'
+                    archive: 'package/Bikeable-<%= config.manifest.version %>.zip'
                 },
                 files: [{
                     expand: true,
