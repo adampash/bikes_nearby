@@ -7,7 +7,7 @@ chrome.runtime.onInstalled.addListener (details) ->
     log('previousVersion', details.previousVersion)
 
 setNearest = (station) ->
-  chrome.browserAction.setBadgeBackgroundColor color: [129, 0, 236, 255]
+  chrome.browserAction.setBadgeBackgroundColor color: [0, 0, 0, 255]
   chrome.browserAction.setBadgeText({text: "" + station.availableBikes})
 
 getStations = (callback) ->

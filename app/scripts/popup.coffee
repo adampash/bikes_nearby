@@ -7,107 +7,13 @@ stationLatLng = null
 infowindow = null
 path = null
 
-mapStyle = [
-  {
-    featureType: "poi.school"
-    elementType: "geometry.fill"
-    stylers: [color: "#D6D6D6"]
-  }
-  {
-    featureType: "poi.park"
-    stylers: [color: "#B5B4B3"]
-  }
-  {
-    featureType: "poi.attraction"
-    elementType: "labels.text.fill"
-    stylers: [color: "#969696"]
-  }
-  {
-    featureType: "poi"
-    elementType: "labels.text.fill"
-    stylers: [color: "#969696"]
-  }
-  {
-    featureType: "road"
-    elementType: "geometry"
-    stylers: [color: "#FAFAFA"]
-  }
-  {
-    featureType: "poi.sports_complex"
-    elementType: "geometry.fill"
-    stylers: [color: "#B5B4B3"]
-  }
-  {
-    elementType: "labels.text.stroke"
-    stylers: [
-      {
-        color: "#000000"
-      }
-      {
-        visibility: "off"
-      }
-    ]
-  }
-  {
-    featureType: "landscape.man_made"
-    stylers: [color: "#D6D6D6"]
-  }
-  {
-    featureType: "poi.medical"
-    elementType: "geometry.fill"
-    stylers: [color: "#D6D6D6"]
-  }
-  {
-    featureType: "poi.government"
-    stylers: [color: "#D6D6D6"]
-  }
-  {
-    featureType: "administrative"
-    elementType: "geometry.fill"
-    stylers: [color: "#D6D6D6"]
-  }
-  {
-    featureType: "poi.place_of_worship"
-    elementType: "geometry.fill"
-    stylers: [color: "#D6D6D6"]
-  }
-  {
-    featureType: "landscape.natural"
-    elementType: "geometry.fill"
-    stylers: [color: "#D6D6D6"]
-  }
-  {
-    featureType: "poi.attraction"
-    elementType: "geometry.fill"
-    stylers: [color: "#D6D6D6"]
-  }
-  {
-    featureType: "water"
-    elementType: "geometry.fill"
-    stylers: [color: "#9C89AD"]
-  }
-  {
-    featureType: "transit.line"
-    stylers: [visibility: "off"]
-  }
-  {
-    elementType: "labels.text.fill"
-    stylers: [color: "#5f5f5f"]
-  }
-  {
-    featureType: "transit.station.airport"
-    elementType: "geometry.fill"
-    stylers: [color: "#B5B4B3"]
-  }
-]
-
 getEta = (request, $station, index, callback) ->
   directionsService = new google.maps.DirectionsService()
   directionsService.route request, (result, status) ->
     duration = result.routes[0].legs[0].duration.text
     $station.find('.eta').text(duration)
     nearestStations[index].directions = result
-    callback() if callback?
+    callback() if index is 0
 
 
 embedMap = (currentLocation) ->
@@ -128,6 +34,7 @@ embedMap = (currentLocation) ->
     map: map
     title:"You"
     icon: "images/you.png"
+    zIndex: 1000
 
 dropMarker = (station) ->
   stationLatLng = new google.maps.LatLng(station.latitude, station.longitude)
@@ -135,12 +42,13 @@ dropMarker = (station) ->
     position: stationLatLng
     map: map
     title: station.stationName
-    icon: "images/station.png"
+    icon: "images/station_off.png"
     id: station.id
   google.maps.event.addListener new_marker, 'click', ->
     infowindow.setMap(null) if infowindow?
     infowindow = constructInfoWindow(station)
     infowindow.open(map, new_marker)
+    # new_marker.icon = "images/station_off.png"
     # scrollTo(station)
     # activateStation(station, 0, false)
     # $(".stations ##{new_marker.id}").click()
@@ -158,7 +66,7 @@ drawPath = (index) ->
     path: directions.routes[0].overview_path
     # geodesic: true
     strokeOpacity: 0.5
-    strokeColor: '#8100ec'
+    strokeColor: '#ff3700'
     strokeWeight: 5
   path.setMap(map)
 
@@ -176,8 +84,11 @@ zoomToFit = ->
 activateStation = (station, index, trigger=true) ->
   console.log 'activate station ' + index
   marker = dropMarker(station)
-  google.maps.event.trigger(marker, 'click')
   zoomToFit()
+  # google.maps.event.trigger(marker, 'click')
+  setTimeout ->
+    google.maps.event.trigger(marker, 'click')
+  , 5
   drawPath(index)
   $('.station').removeClass('active')
   $('.station' + index).addClass('active')
@@ -191,11 +102,13 @@ scrollTo = (station) ->
 allMarkers = []
 showAll = (bool) ->
   if bool
-    map.setZoom(map.getZoom() - 2)
+    if map.getZoom() > 16
+      map.setZoom(map.getZoom() - 2)
     for station in nearestStations
       allMarkers.push dropMarker(station)
     marker.setMap(null) if marker?
     path.setMap(null) if path?
+    $('.stations .station').removeClass 'active'
   else
     for mark in allMarkers
       mark.setMap(null)
@@ -263,12 +176,11 @@ port.onMessage.addListener (data) ->
         travelMode: google.maps.TravelMode.WALKING
 
       if index == 0
+        # console.log 'it is happening'
         firstCallback = =>
           # activateStation(nearestStations[0], 0)
-          setTimeout =>
-            $('.stations .station').first().click()
-            infowindow = constructInfoWindow(nearestStations[0])
-          , 500
+          $('.stations .station').first().click()
+            # infowindow = constructInfoWindow(nearestStations[0])
       getEta(request, $station, index, firstCallback)
 
   else
@@ -293,4 +205,227 @@ $ ->
       showAll(true)
       $(@).text("Show closest")
     $(@).toggleClass('all')
+
+mapStyle = [
+    "featureType": "landscape.man_made"
+    "elementType": "geometry.stroke"
+  ,
+    "featureType": "water"
+    "elementType": "labels.text.stroke"
+    "stylers": [
+      "color": "#2A5082"
+      "visibility": "off"
+    ]
+  ,
+    "featureType": "poi.park"
+    "elementType": "geometry.fill"
+    "stylers": [
+      "color": "#D6E0CC"
+    ]
+  ,
+    "featureType": "landscape.natural.landcover"
+    "elementType": "geometry"
+    "stylers": [
+      "color": "#D6E0CC"
+    ]
+  ,
+    "featureType": "landscape.man_made"
+    "elementType": "geometry.fill"
+    "stylers": [
+      "color": "#EEE7DD"
+      "visibility": "on"
+    ]
+  ,
+    "featureType": "poi.attraction"
+    "elementType": "labels.text.stroke"
+    "stylers": [
+      "visibility": "off"
+    ]
+  ,
+    "featureType": "poi.attraction"
+    "elementType": "geometry.fill"
+    "stylers": [
+      "visibility": "off"
+    ]
+  ,
+    "featureType": "poi.attraction"
+    "elementType": "labels.text.fill"
+    "stylers": [
+      "color": "#574400"
+    ]
+  ,
+    "featureType": "poi.business"
+    "elementType": "geometry.fill"
+    "stylers": [
+      "color": "#808080"
+      "visibility": "off"
+    ]
+  ,
+    "featureType": "poi.government"
+    "stylers": [
+      "visibility": "off"
+    ]
+  ,
+    "featureType": "poi.medical"
+    "elementType": "geometry.fill"
+    "stylers": [
+      "visibility": "off"
+    ]
+  ,
+    "featureType": "poi.place_of_worship"
+    "elementType": "geometry.fill"
+    "stylers": [
+      "visibility": "off"
+    ]
+  ,
+    "featureType": "poi.school"
+    "elementType": "geometry.fill"
+    "stylers": [
+      "visibility": "off"
+    ]
+  ,
+    "featureType": "poi.sports_complex"
+    "elementType": "geometry"
+    "stylers": [
+      "color": "#808080"
+      "visibility": "off"
+    ]
+  ,
+    "featureType": "road"
+    "elementType": "geometry.stroke"
+    "stylers": [
+      "visibility": "on"
+      "color": "#E0D9CF"
+    ]
+  ,
+    "featureType": "road.highway"
+    "elementType": "geometry.fill"
+    "stylers": [
+      "color": "#EED18F"
+    ]
+  ,
+    "featureType": "road.highway"
+    "elementType": "geometry.stroke"
+    "stylers": [
+      "color": "#D6BA7A"
+    ]
+  ,
+    "featureType": "poi"
+    "elementType": "labels.text.stroke"
+    "stylers": [
+      "color": "#808080"
+      "visibility": "off"
+    ]
+  ,
+    "featureType": "poi"
+    "elementType": "labels.text.fill"
+    "stylers": [
+      "color": "#808080"
+    ]
+  ,
+    "featureType": "road"
+    "elementType": "geometry"
+    "stylers": [
+      "color": "#ffffff"
+    ]
+  ,
+    "elementType": "labels.text.stroke"
+    "stylers": [
+      "visibility": "off"
+    ]
+  ,
+    "featureType": "road"
+    "elementType": "labels.text.fill"
+    "stylers": [
+      "color": "#808080"
+    ]
+  ,
+    "featureType": "road"
+    "elementType": "labels.text.stroke"
+    "stylers": [
+      "visibility": "off"
+    ]
+  ,
+    "featureType": "road"
+    "elementType": "geometry.stroke"
+    "stylers": [
+      "color": "#E0D9CF"
+    ]
+  ,
+    "featureType": "transit.station.rail"
+    "elementType": "labels.text.fill"
+    "stylers": [
+      "color": "#000000"
+    ]
+  ,
+    "featureType": "transit.station"
+    "elementType": "labels.text.stroke"
+    "stylers": [
+      "visibility": "off"
+    ]
+  ,
+    "featureType": "transit.line"
+    "stylers": [
+      "visibility": "off"
+    ]
+  ,
+    "featureType": "poi"
+    "elementType": "geometry"
+    "stylers": [
+      "color": "#D6E0CC"
+    ]
+  ,
+    "featureType": "poi.attraction"
+    "elementType": "geometry"
+    "stylers": [
+      "visibility": "off"
+    ]
+  ,
+    "featureType": "poi.attraction"
+    "elementType": "geometry.fill"
+    "stylers": [
+      "visibility": "off"
+    ]
+  ,
+    "featureType": "poi.business"
+    "elementType": "labels.icon"
+    "stylers": [
+      "visibility": "off"
+    ]
+  ,
+    "featureType": "poi.school"
+    "elementType": "labels.icon"
+    "stylers": [
+      "color": "#808080"
+      "visibility": "off"
+    ]
+  ,
+    "featureType": "poi"
+    "elementType": "labels.icon"
+    "stylers": [
+      "visibility": "off"
+    ]
+  ,
+    "featureType": "landscape"
+    "elementType": "labels.text"
+    "stylers": [
+      "color": "#808080"
+    ]
+  ,
+    "featureType": "road.highway"
+    "elementType": "labels.icon"
+    "stylers": [
+      "saturation": -100
+      "visibility": "on"
+      "lightness": 38
+    ]
+  ,
+    "featureType": "water"
+    "elementType": "geometry.fill"
+    "stylers": [
+      "color": "#CDE5F1"
+    ]
+  ,
+    "featureType": "landscape"
+]
 

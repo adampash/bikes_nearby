@@ -42,7 +42,7 @@ body {
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000354}}
 .station.active div.numbikes, .station.active div.eta {
-  color: #8100ec;
+  color: #ff3700;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000356}}
 .station div {
@@ -51,7 +51,7 @@ body {
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000359}}
 .station div.numbikes {
-  color: #8100ec;
+  color: #ff3700;
   font-size: 32px;
   width: 75px;
   margin-right: 10px;

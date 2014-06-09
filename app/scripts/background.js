@@ -14,7 +14,7 @@
 
   setNearest = function(station) {
     chrome.browserAction.setBadgeBackgroundColor({
-      color: [129, 0, 236, 255]
+      color: [0, 0, 0, 255]
     });
     return chrome.browserAction.setBadgeText({
       text: "" + station.availableBikes
