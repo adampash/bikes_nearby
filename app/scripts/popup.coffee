@@ -15,6 +15,12 @@ getEta = (request, $station, index, callback) ->
     nearestStations[index].directions = result
     callback() if index is 0
 
+setupSearch = ->
+  input = $('input')[0]
+  places.search map, input, =>
+    if $('.toggle_all').text().indexOf('all') > -1
+      $('.toggle_all').click()
+
 
 embedMap = (currentLocation) ->
   youLatLng = new google.maps.LatLng(currentLocation.latitude, currentLocation.longitude)
@@ -54,12 +60,12 @@ dropMarker = (station, active=false) ->
     infowindow.setMap(null) if infowindow?
     infowindow = constructInfoWindow(station)
     infowindow.open(map, new_marker)
-    new_marker.setIcon "images/station_on.png"
+
     prev_marker.setIcon "images/station_off.png" if prev_marker?
+    new_marker.setIcon "images/station_on.png"
+
     scrollTo(station)
-    # activateStation(station, 0, false)
-    # $(".stations ##{new_marker.id}").click()
-    # TODO select related station in stations div and scroll to it
+
     prev_marker = new_marker
   new_marker
 
@@ -96,7 +102,7 @@ activateStation = (station, index, trigger=true) ->
   # google.maps.event.trigger(marker, 'click')
   setTimeout ->
     google.maps.event.trigger(marker, 'click')
-  , 30
+  , 100
   drawPath(index)
   $('.station').removeClass('active')
   $('.station' + index).addClass('active')
@@ -133,6 +139,10 @@ animateTo = ($station) ->
   $('.stations').animate
     scrollTop: position
   , 150
+
+Mousetrap.bind ['/'], ->
+  $('input').select()
+  false
 
 Mousetrap.bind ['down', 'j'], ->
   animateTo $('.station.active').next()
@@ -197,6 +207,7 @@ port.onMessage.addListener (data) ->
   else
     $('.station.header .name').text "No bikes near your location"
 
+  setupSearch()
 
   $('.stations .station').click (event) ->
     marker.setMap(null) if marker?
@@ -207,6 +218,10 @@ port.onMessage.addListener (data) ->
     activateStation(nearestStations[index], index)
 
 $ ->
+  setTimeout ->
+    $('input').blur()
+  , 180
+
   $('.toggle_all').click ->
     if $(@).hasClass('all')
       showAll(false)

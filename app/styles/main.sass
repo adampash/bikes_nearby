@@ -13,13 +13,14 @@ $font: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", san
 $font_medium: "HelveticaNeue-Medium", "Helvetica Neue Medium", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif
 $font_light: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif
 $rowheight: 50px
+$inputheight: 24px
 
 $header_bg: $black
 $highlight_bg: $red
 $bikes_avail_color: $red
 
 $map_height: 250px
-$stations_height: 270px
+$stations_height: 250px
 
 body
   width: 450px
@@ -95,6 +96,14 @@ body
       // background: white
     .name
       color: white
+
+input
+  outline: none
+  height: $inputheight
+  font-size: 12px
+  font: $font
+  margin-left: 12px
+  width: 310px
 
 .infoBox
   background: blue

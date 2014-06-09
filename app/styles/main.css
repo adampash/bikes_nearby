@@ -1,7 +1,7 @@
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000324}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000325}}
 body {
   width: 450px;
-  height: 570px;
+  height: 550px;
   font-family: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-weight: 300;
   padding: 0;
@@ -9,47 +9,47 @@ body {
   border-radius: none;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000333}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000334}}
 #mapcanvas {
   height: 250px;
   background: #b4b4b4;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000338}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000339}}
 .stations {
-  height: 270px;
+  height: 250px;
   overflow-y: auto;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000341}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000342}}
 .station {
   opacity: 0.5;
   height: 50px;
   line-height: 50px;
   cursor: pointer;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000346}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000347}}
 .station + .station {
   border-top: 1px solid #b4b4b4;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000348}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000349}}
 .station.active {
   opacity: 1;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000352}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000353}}
 .station.active div.name {
   color: black;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000354}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000355}}
 .station.active div.numbikes, .station.active div.eta {
   color: #ff3700;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000356}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000357}}
 .station div {
   float: left;
   color: black;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000359}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000360}}
 .station div.numbikes {
   color: #ff3700;
   font-size: 32px;
@@ -58,17 +58,17 @@ body {
   text-align: center;
   font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000366}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000367}}
 .station div.name {
   font-size: 14px;
   margin-right: 10px;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000370}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000371}}
 .station div.eta {
   font-size: 14px;
   font-family: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000373}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000374}}
 .station div.toggle_all {
   color: white;
   float: right;
@@ -76,7 +76,7 @@ body {
   font-size: 12px;
   margin-right: 15px;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000379}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000380}}
 .station.header {
   background: black;
   color: white;
@@ -84,7 +84,7 @@ body {
   opacity: 1;
   border-top: none;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000387}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000388}}
 .station.header .numbikes .bike_icon {
   background: url("/images/bike.png");
   background-repeat: no-repeat;
@@ -93,12 +93,22 @@ body {
   margin-left: 17px;
   margin-top: 5px;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000396}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000397}}
 .station.header .name {
   color: white;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\0000399}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\00003100}}
+input {
+  outline: none;
+  height: 24px;
+  font-size: 12px;
+  font: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  margin-left: 12px;
+  width: 310px;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\00003108}}
 .infoBox {
   background: blue;
 }

@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  var activateStation, allMarkers, allOn, animateTo, constructInfoWindow, drawPath, dropMarker, embedMap, getEta, infowindow, map, mapStyle, marker, nearestStations, path, port, prev_marker, scrollTo, showAll, stationLatLng, youLatLng, zoomToFit;
+  var activateStation, allMarkers, allOn, animateTo, constructInfoWindow, drawPath, dropMarker, embedMap, getEta, infowindow, map, mapStyle, marker, nearestStations, path, port, prev_marker, scrollTo, setupSearch, showAll, stationLatLng, youLatLng, zoomToFit;
 
   map = null;
 
@@ -24,6 +24,17 @@
       nearestStations[index].directions = result;
       if (index === 0) {
         return callback();
+      }
+    });
+  };
+
+  setupSearch = function() {
+    var input,
+      _this = this;
+    input = $('input')[0];
+    return places.search(map, input, function() {
+      if ($('.toggle_all').text().indexOf('all') > -1) {
+        return $('.toggle_all').click();
       }
     });
   };
@@ -77,10 +88,10 @@
       }
       infowindow = constructInfoWindow(station);
       infowindow.open(map, new_marker);
-      new_marker.setIcon("images/station_on.png");
       if (prev_marker != null) {
         prev_marker.setIcon("images/station_off.png");
       }
+      new_marker.setIcon("images/station_on.png");
       scrollTo(station);
       return prev_marker = new_marker;
     });
@@ -134,7 +145,7 @@
     zoomToFit();
     setTimeout(function() {
       return google.maps.event.trigger(marker, 'click');
-    }, 30);
+    }, 100);
     drawPath(index);
     $('.station').removeClass('active');
     return $('.station' + index).addClass('active');
@@ -187,6 +198,11 @@
       scrollTop: position
     }, 150);
   };
+
+  Mousetrap.bind(['/'], function() {
+    $('input').select();
+    return false;
+  });
 
   Mousetrap.bind(['down', 'j'], function() {
     animateTo($('.station.active').next());
@@ -255,6 +271,7 @@
     } else {
       $('.station.header .name').text("No bikes near your location");
     }
+    setupSearch();
     return $('.stations .station').click(function(event) {
       if (marker != null) {
         marker.setMap(null);
@@ -270,6 +287,9 @@
   });
 
   $(function() {
+    setTimeout(function() {
+      return $('input').blur();
+    }, 180);
     return $('.toggle_all').click(function() {
       if ($(this).hasClass('all')) {
         showAll(false);
