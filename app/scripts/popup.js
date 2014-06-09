@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  var activateStation, allMarkers, animateTo, constructInfoWindow, drawPath, dropMarker, embedMap, getEta, infowindow, map, mapStyle, marker, nearestStations, path, port, showAll, stationLatLng, youLatLng, zoomToFit;
+  var activateStation, allMarkers, animateTo, constructInfoWindow, drawPath, dropMarker, embedMap, getEta, infowindow, map, mapStyle, marker, nearestStations, path, port, scrollTo, showAll, stationLatLng, youLatLng, zoomToFit;
 
   map = null;
 
@@ -201,11 +201,15 @@
       position: stationLatLng,
       map: map,
       title: station.stationName,
-      icon: "images/station.png"
+      icon: "images/station.png",
+      id: station.id
     });
-    new_marker.info = constructInfoWindow(station);
     google.maps.event.addListener(new_marker, 'click', function() {
-      return new_marker.info.open(map, new_marker);
+      if (infowindow != null) {
+        infowindow.setMap(null);
+      }
+      infowindow = constructInfoWindow(station);
+      return infowindow.open(map, new_marker);
     });
     return new_marker;
   };
@@ -248,7 +252,10 @@
     return map.setZoom(map.getZoom() - 1);
   };
 
-  activateStation = function(station, index) {
+  activateStation = function(station, index, trigger) {
+    if (trigger == null) {
+      trigger = true;
+    }
     console.log('activate station ' + index);
     marker = dropMarker(station);
     google.maps.event.trigger(marker, 'click');
@@ -257,6 +264,8 @@
     $('.station').removeClass('active');
     return $('.station' + index).addClass('active');
   };
+
+  scrollTo = function(station) {};
 
   allMarkers = [];
 
@@ -284,7 +293,6 @@
   };
 
   animateTo = function($station) {
-    var scrollTo;
     scrollTo = $station.offset().top - $('.stations').offset().top + $('.stations').scrollTop() - 60;
     return $('.stations').animate({
       scrollTop: scrollTo
@@ -330,7 +338,7 @@
       $('.stations').html('');
       for (index = _i = 0, _len = nearestStations.length; _i < _len; index = ++_i) {
         station = nearestStations[index];
-        html = "<div class=\"station station" + index + "\">\n  <div class=\"numbikes\"></div>\n  <div class=\"name\"></div>\n  <div class=\"eta\"></div>\n</div>";
+        html = "<div class=\"station station" + index + "\" id=\"" + station.id + "\">\n  <div class=\"numbikes\"></div>\n  <div class=\"name\"></div>\n  <div class=\"eta\"></div>\n</div>";
         $('.stations').append(html);
         $station = $('.station' + index);
         $station.find('.numbikes').text(station.availableBikes);
@@ -351,7 +359,8 @@
         if (index === 0) {
           firstCallback = function() {
             return setTimeout(function() {
-              return $('.stations .station').first().click();
+              $('.stations .station').first().click();
+              return infowindow = constructInfoWindow(nearestStations[0]);
             }, 500);
           };
         }

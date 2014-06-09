@@ -136,9 +136,14 @@ dropMarker = (station) ->
     map: map
     title: station.stationName
     icon: "images/station.png"
-  new_marker.info = constructInfoWindow(station)
+    id: station.id
   google.maps.event.addListener new_marker, 'click', ->
-    new_marker.info.open(map, new_marker)
+    infowindow.setMap(null) if infowindow?
+    infowindow = constructInfoWindow(station)
+    infowindow.open(map, new_marker)
+    # scrollTo(station)
+    # activateStation(station, 0, false)
+    # $(".stations ##{new_marker.id}").click()
     # TODO select related station in stations div and scroll to it
   new_marker
 
@@ -153,11 +158,6 @@ drawPath = (index) ->
     path: directions.routes[0].overview_path
     # geodesic: true
     strokeOpacity: 0.5
-    # icons: [
-    #   icon: lineSymbol
-    #   offset: '0'
-    #   repeat: '15px'
-    # ]
     strokeColor: '#8100ec'
     strokeWeight: 5
   path.setMap(map)
@@ -165,37 +165,6 @@ drawPath = (index) ->
 constructInfoWindow = (station, show=true) ->
   infowindow = new google.maps.InfoWindow
     content: "<b>#{station.availableBikes} bikes #{station.availableDocks} docks</b>"
-  # boxOptions =
-  #   content: "#{station.availableBikes}  bikes #{station.availableDocks} docks"
-     # fontSize: "14px"
-      # color: 'white'
-      # width: '150px'
-    # pixelOffset: new google.maps.Size(-60, -40)
-    # position: new google.maps.LatLng(station.latitude, station.longitude)
-
-
-#   `
-#     var myOptions = {
-#      content: "HI THERE"
-#   ,boxStyle: {
-#      border: "1px solid black"
-#     ,textAlign: "center"
-#     ,fontSize: "8pt"
-#     ,width: "50px"
-#    }
-#   ,disableAutoPan: true
-#   ,pixelOffset: new google.maps.Size(-25, 0)
-#   ,position: new google.maps.LatLng(station.latitude, station.longitude)
-#   ,closeBoxURL: ""
-#   ,isHidden: false
-#   ,pane: "mapPane"
-#   ,enableEventPropagation: true
-#   };
-# `
-
-
-  # infobox = new InfoBox boxOptions
-  # infobox.open(map,marker)
 
 zoomToFit = ->
   bounds = new google.maps.LatLngBounds()
@@ -204,7 +173,7 @@ zoomToFit = ->
   map.fitBounds(bounds)
   map.setZoom(map.getZoom() - 1)
 
-activateStation = (station, index) ->
+activateStation = (station, index, trigger=true) ->
   console.log 'activate station ' + index
   marker = dropMarker(station)
   google.maps.event.trigger(marker, 'click')
@@ -212,6 +181,12 @@ activateStation = (station, index) ->
   drawPath(index)
   $('.station').removeClass('active')
   $('.station' + index).addClass('active')
+
+scrollTo = (station) ->
+  # console.log 'scroll to', station
+  # $('.station').removeClass('active')
+  # $('#' + station.id).addClass('active')
+
 
 allMarkers = []
 showAll = (bool) ->
@@ -268,7 +243,7 @@ port.onMessage.addListener (data) ->
     $('.stations').html('')
     for station, index in nearestStations
       html = """
-        <div class="station station#{index}">
+        <div class="station station#{index}" id="#{station.id}">
           <div class="numbikes"></div>
           <div class="name"></div>
           <div class="eta"></div>
@@ -292,6 +267,7 @@ port.onMessage.addListener (data) ->
           # activateStation(nearestStations[0], 0)
           setTimeout =>
             $('.stations .station').first().click()
+            infowindow = constructInfoWindow(nearestStations[0])
           , 500
       getEta(request, $station, index, firstCallback)
 
@@ -309,8 +285,8 @@ port.onMessage.addListener (data) ->
 
 $ ->
   $('.toggle_all').click ->
-    if $(@).hasClass('all') 
-      showAll(false) 
+    if $(@).hasClass('all')
+      showAll(false)
       $(@).text("Show all")
       activateStation(nearestStations[0], 0)
     else
