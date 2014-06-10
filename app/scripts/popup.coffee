@@ -228,6 +228,11 @@ port.onMessage.addListener (data) ->
 $ ->
   $('input').on 'focus', ->
     $('input').select()
+    $('.searchbar').addClass 'expand'
+  $('input').on 'blur', ->
+    debugger
+    if $('input').val() is ''
+      $('.searchbar').removeClass 'expand'
   $('input').on 'mouseup', ->
     false
 

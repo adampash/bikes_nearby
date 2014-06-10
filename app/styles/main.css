@@ -110,10 +110,15 @@ body {
   left: 30px;
   border: 1px solid #aaaaaa;
   border-radius: 3px;
-  width: 275px;
+  width: 120px;
   background: white;
+  overflow: hidden;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\00003111}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\00003112}}
+.searchbar.expand {
+  width: 275px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\00003114}}
 .searchbar input {
   width: 260px;
   margin-left: 2px;
@@ -126,7 +131,7 @@ body {
   padding-left: 8px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\00003124}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ap\/code\/citi_chrome\/app\/styles\/main\.sass}line{font-family:\00003125}}
 .infoBox {
   background: blue;
 }

@@ -299,7 +299,14 @@
 
   $(function() {
     $('input').on('focus', function() {
-      return $('input').select();
+      $('input').select();
+      return $('.searchbar').addClass('expand');
+    });
+    $('input').on('blur', function() {
+      debugger;
+      if ($('input').val() === '') {
+        return $('.searchbar').removeClass('expand');
+      }
     });
     $('input').on('mouseup', function() {
       return false;

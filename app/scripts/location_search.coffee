@@ -25,12 +25,7 @@
           map.setCenter(place.geometry.location)
           map.setZoom(17)  # Why 17? Because it looks good.
 
-        # marker.setIcon
-        #   url: place.icon
-        #   size: new google.maps.Size(71, 71)
-        #   origin: new google.maps.Point(0, 0)
-        #   anchor: new google.maps.Point(17, 34)
-        #   scaledSize: new google.maps.Size(35, 35)
+        marker.setIcon 'images/places.png'
         marker.setPosition(place.geometry.location)
         marker.setVisible(true)
 
@@ -41,7 +36,7 @@
             (place.address_components[2] && place.address_components[2].short_name || '')
           ].join(' ')
 
-        infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address)
+        infowindow.setContent('<div class="myFont"><strong>' + place.name + '</strong><br>' + address)
         # infowindow.open(map, marker)
 
         callback(marker) if callback?

@@ -23,11 +23,15 @@
     return img.onload = function() {
       var imageData, numBikes;
       ctx.drawImage(img, 0, 0);
-      ctx.font = "7pt HelveticaNeue";
       ctx.fontStyle = 'bold';
       ctx.fillStyle = 'white';
       ctx.textAlign = 'center';
       numBikes = station.availableBikes + '';
+      if (numBikes.length === 1) {
+        ctx.font = "10px HelveticaNeue";
+      } else {
+        ctx.font = "9px HelveticaNeue";
+      }
       ctx.fillText(parseInt(numBikes), canvas.width / 2, 10);
       imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       return chrome.browserAction.setIcon({
